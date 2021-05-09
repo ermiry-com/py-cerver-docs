@@ -77,4 +77,74 @@
 |3G2		|	3g2			| 	3GPP2 audio/video container				|	video/3gpp2																	|
 |7Z			|	7z			| 	7-zip archive							|	application/x-7z															|
 
+---
 
+**http_content_type_extension ()** matches the **ContentType** value with its file extension
+
+``` python
+http_content_type_extension (
+	ContentType			# the content type value to be matched
+) -> c_char_p
+```
+
+**Returns** a constant string reference to the matching **ContentType** file extension
+
+---
+
+**http_content_type_description ()** matches the **ContentType** value with its description
+
+``` python
+http_content_type_description (
+	ContentType			# the content type value to be matched
+) -> c_char_p
+```
+
+**Returns** a constant string reference to the matching **ContentType** description
+
+---
+
+**http_content_type_mime ()** matches the **ContentType** value with its MIME type string
+
+``` python
+http_content_type_mime (
+	ContentType			# the content type value to be matched
+) -> c_char_p
+```
+
+**Returns** a constant string reference to the matching MIME type
+
+---
+
+**http_content_type_by_mime ()** matches the MIME type string with the correct **ContentType** value
+
+``` python
+http_content_type_by_mime (
+	c_char_p			# the MIME type string
+) -> ContentType
+```
+
+**Returns** the **ContentType** value that matches the MIME type string
+
+---
+
+**http_content_type_mime_by_extension ()** finds a matching MIME type using the provided extension
+
+``` python
+http_content_type_mime_by_extension (
+	c_char_p			# the file extension to be used
+) -> c_char_p
+```
+
+**Returns** a constant string reference to the matching MIME type
+
+---
+
+**http_content_type_is_json ()** checks if the provided string is equals to **application/json** ignoring the case
+
+``` python
+http_content_type_is_json (
+	c_char_p			# the string to be compared
+) -> c_bool
+```
+
+**Returns** true if the string value is equal to **application/json**, false if no match
