@@ -10,60 +10,60 @@ IMAGE_TYPE_BMP
 
 ---
 
-**files_image_type_to_string ()**
+**files_image_type_to_string ()** matches the **ImageType** with its correct string representation
 
 ``` python
 files_image_type_to_string (
-	c_void_p			#
-) -> None
+	ImageType			# the image type to be matched
+) -> c_char_p
 ```
 
-**Returns**
+**Returns** a constant string reference to the **ImageType** name
 
 ---
 
-**files_image_get_type ()**
+**files_image_get_type ()** opens the file and checks its magic bytes to get the file's image type
 
 ``` python
 files_image_get_type (
-	c_void_p			#
-) -> None
+	c_char_p			# the filename to be opened
+) -> ImageType
 ```
 
-**Returns**
+**Returns** the matching **ImageType** based on the file's magic bytes
 
 ---
 
-**files_image_get_type_by_extension ()**
+**files_image_get_type_by_extension ()** matches the provided file extension with its correct type
 
 ``` python
 files_image_get_type_by_extension (
-	c_void_p			#
-) -> None
+	c_char_p			# the string value representing a file extension
+) -> ImageType
 ```
 
-**Returns**
+**Returns** the correct image type based on the filename's extension
 
 ---
 
-**files_image_extension_is_jpeg ()**
+**files_image_extension_is_jpeg ()** checks if the provided string value matches the **jpg/jpeg** extension
 
 ``` python
 files_image_extension_is_jpeg (
-	c_void_p			#
-) -> None
+	c_char_p			# the string value representing a file extension
+) -> c_bool
 ```
 
-**Returns**
+**Returns** true if the filename's extension is jpg or jpeg
 
 ---
 
-**files_image_extension_is_png ()**
+**files_image_extension_is_png ()** checks if the provided string value matches the **png** extension
 
 ``` python
 files_image_extension_is_png (
-	c_void_p			#
-) -> None
+	c_char_p			# the string value representing a file extension
+) -> c_bool
 ```
 
-**Returns**
+**Returns** true if the filename's extension is png
