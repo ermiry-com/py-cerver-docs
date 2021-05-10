@@ -34,7 +34,7 @@ http_response_return (
 
 ---
 
-**http_response_set_status ()** sets the http response's status code to be set in the header when compilling
+**http_response_set_status ()** sets the HTTP response's status code to be set in the header when compilling
 
 ``` python
 http_response_set_status (
@@ -123,7 +123,7 @@ http_response_set_data_ref (
 
 ---
 
-**http_response_create ()** creates a new http response with the specified status code. Ability to set the response's data (body); it will be copied to the response and the original data can be safely deleted
+**http_response_create ()** creates a new HTTP response with the specified status code. Ability to set the response's data (body); it will be copied to the response and the original data can be safely deleted
 
 ``` python
 http_response_create (
@@ -258,108 +258,111 @@ http_response_render_file (
 
 ## JSON
 
-**http_response_create_json ()**
+**http_response_create_json ()** creates a HTTP response with the defined status code and a json data (body) that accepts additional configuration and needs to be compiled to be sent
 
 ``` python
 http_response_create_json (
-	c_void_p			# reference to a HTTP response instance
-) -> None
+	http_status,		# the response's status code
+	c_char_p,			# a JSON string to be used as the body
+	c_size_t			# the size of the JSON string
+) -> c_void_p
 ```
 
-**Returns**
+**Returns** a new HTTP response instance
 
 ---
 
-**http_response_create_json_key_value ()**
+**http_response_create_json_key_value ()** creates a HTTP response with the defined status code and a data (body) with a json message of type { key: value } that accepts additional configuration and needs to be compiled to be sent
 
 ``` python
 http_response_create_json_key_value (
-	c_void_p			# reference to a HTTP response instance
-) -> None
+	http_status,		# the response's status code
+	c_char_p,			# the JSON message "key" string value
+	c_char_p			# the JSON message "value" string value
+) -> c_void_p
 ```
 
-**Returns**
+**Returns** a new HTTP response instance
 
 ---
 
-**http_response_json_msg ()**
+**http_response_json_msg ()** creates a HTTP response with the defined status code and a data (body) with a json message of type { msg: "your message" } ready to be sent
 
 ``` python
 http_response_json_msg (
-	c_void_p			# reference to a HTTP response instance
-) -> None
+	http_status			# the response's status code
+	c_char_p			# the JSON "your message" string value
+) -> c_void_p
 ```
 
-**Returns**
+**Returns** a new HTTP response instance
 
 ---
 
-**http_response_json_msg_send ()**
+**http_response_json_msg ()** creates and sends a HTTP json message response with the defined status code & message
 
 ``` python
-http_response_json_msg_send (
-	c_void_p			# reference to a HTTP response instance
-) -> None
+http_response_json_msg (
+	c_void_p,			# reference to a HttpReceive instance
+	http_status,		# the response's status code
+	c_char_p			# the JSON "your message" string value
+) -> c_uint8
 ```
 
-**Returns**
+**Returns** 0 on success, 1 on error
 
 ---
 
-**http_response_json_error ()**
-
-``` python
-http_response_json_error (
-	c_void_p			# reference to a HTTP response instance
-) -> None
-```
-
-**Returns**
-
----
-
-**http_response_json_error ()**
+**http_response_json_error ()** creates a HTTP response with the defined status code and a data (body) with a json message of type { error: "your error message" } ready to be sent
 
 ``` python
 http_response_json_error (
-	c_void_p			# reference to a HTTP response instance
-) -> None
+	http_status,		# the response's status code
+	c_char_p			# the JSON "your error message" string value
+) -> c_void_p
 ```
 
-**Returns**
+**Returns** a new HTTP response instance
 
 ---
 
-**http_response_json_error_send ()**
+**http_response_json_error_send ()** creates and sends a HTTP json error response with the defined status code & message
 
 ``` python
 http_response_json_error_send (
-	c_void_p			# reference to a HTTP response instance
-) -> None
+	c_void_p,			# reference to a HttpReceive instance
+	http_status,		# the response's status code
+	c_char_p			# the JSON "your error message" string value
+) -> c_uint8
 ```
 
-**Returns**
+**Returns** 0 on success, 1 on error
 
 ---
 
-**http_response_json_key_value ()**
+**http_response_json_key_value ()** creates a HTTP response with the defined status code and a data (body) with a json meesage of type { key: value } ready to be sent
 
 ``` python
 http_response_json_key_value (
-	c_void_p			# reference to a HTTP response instance
-) -> None
+	http_status,		# the response's status code
+	c_char_p,			# the JSON message "key" string value
+	c_char_p			# the JSON message "value" string value
+) -> c_void_p
 ```
 
-**Returns**
+**Returns** a new HTTP response instance
 
 ---
 
-**http_response_json_key_value_send ()**
+**http_response_json_key_value_send ()** creates and sends a HTTP custom json response with the defined status code & key-value
 
 ``` python
 http_response_json_key_value_send (
-	c_void_p			# reference to a HTTP response instance
-) -> None
+	c_void_p,			# reference to a HttpReceive instance
+	http_status,		# the response's status code
+	c_char_p,			# the JSON message "key" string value
+	c_char_p			# the JSON message "value" string value
+) -> c_uint8
 ```
 
-**Returns**
+**Returns** 0 on success, 1 on error
