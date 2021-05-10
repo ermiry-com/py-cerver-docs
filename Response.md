@@ -8,8 +8,6 @@ http_response_delete (
 ) -> None
 ```
 
-**Returns**
-
 ---
 
 **http_response_get ()** gets a new HTTP response ready to be used
@@ -30,8 +28,6 @@ http_response_return (
 ) -> None
 ```
 
-**Returns**
-
 ---
 
 **http_response_set_status ()** sets the HTTP response's status code to be set in the header when compilling
@@ -39,7 +35,7 @@ http_response_return (
 ``` python
 http_response_set_status (
 	c_void_p,			# reference to a HTTP response instance
-	http_status			# 
+	http_status			# the response's status code
 ) -> None
 ```
 
@@ -50,8 +46,8 @@ http_response_set_status (
 ``` python
 http_response_set_header (
 	c_void_p,			# reference to a HTTP response instance
-	c_void_p,			# 
-	c_size_t			# 
+	c_void_p,			# a reference to the header value to be used
+	c_size_t			# the response's header size
 ) -> None
 ```
 
@@ -62,8 +58,8 @@ http_response_set_header (
 ``` python
 http_response_add_header (
 	c_void_p,			# reference to a HTTP response instance
-	HttpHeader,			# 
-	c_char_p			# 
+	HttpHeader,			# the HttpHeader header to be added
+	c_char_p			# the real header value as a string reference
 ) -> c_uint8
 ```
 
@@ -76,7 +72,7 @@ http_response_add_header (
 ``` python
 http_response_add_content_type_header (
 	c_void_p,			# reference to a HTTP response instance
-	ContentType			# 
+	ContentType			# the response's ContentType value
 ) -> c_uint8
 ```
 
@@ -89,7 +85,7 @@ http_response_add_content_type_header (
 ``` python
 http_response_add_content_length_header (
 	c_void_p,			# reference to a HTTP response instance
-	c_size_t			# 
+	c_size_t			# the response's content size
 ) -> c_uint8
 ```
 
@@ -102,8 +98,8 @@ http_response_add_content_length_header (
 ``` python
 http_response_set_data (
 	c_void_p,			# reference to a HTTP response instance
-	c_void_p,			# 
-	c_size_t			# 
+	c_void_p,			# a reference to the response's body value
+	c_size_t			# the response's body size
 ) -> None
 ```
 
@@ -114,8 +110,8 @@ http_response_set_data (
 ``` python
 http_response_set_data_ref (
 	c_void_p,			# reference to a HTTP response instance
-	c_void_p,			# 
-	c_size_t			# 
+	c_void_p,			# a reference to the response's body value
+	c_size_t			# the response's body size
 ) -> c_uint8
 ```
 
@@ -127,9 +123,9 @@ http_response_set_data_ref (
 
 ``` python
 http_response_create (
-	http_status,		# 
-	c_void_p,			# 
-	c_size_t			# 
+	http_status,		# the response's status code
+	c_void_p,			# an optional string value as the response's body
+	c_size_t			# the response's body string size
 ) -> c_void_p
 ```
 
@@ -164,7 +160,7 @@ http_response_print (
 ``` python
 http_response_send (
 	c_void_p,			# reference to a HTTP response instance
-	c_void_p			# 
+	c_void_p			# reference to a HttpReceive instance
 ) -> c_uint8
 ```
 
@@ -177,7 +173,7 @@ http_response_send (
 ``` python
 http_response_send_split (
 	c_void_p,			# reference to a HTTP response instance
-	c_void_p			# 
+	c_void_p			# reference to a HttpReceive instance
 ) -> c_uint8
 ```
 
@@ -190,9 +186,9 @@ http_response_send_split (
 ``` python
 http_response_create_and_send (
 	http_status			# reference to a HTTP response instance
-	c_void_p,			# 
-	c_size_t,			# 
-	c_void_p,			# 
+	c_void_p,			# an optional string value as the response's body
+	c_size_t,			# the response's body string size
+	c_void_p,			# reference to a HttpReceive instance
 ) -> c_uint8
 ```
 
@@ -218,11 +214,11 @@ http_send_response (
 
 ``` python
 http_response_render_text (
-	c_void_p,			# 
-	http_status,		# 
-	c_char_p,			# 
-	c_size_t			# 
-) -> None
+	c_void_p,			# reference to a HttpReceive instance
+	http_status,		# the response's status code
+	c_char_p,			# a string reference to the TEXT body
+	c_size_t			# the TEXT string value
+) -> c_uint8
 ```
 
 **Returns** 0 on success, 1 on error
@@ -233,11 +229,11 @@ http_response_render_text (
 
 ``` python
 http_response_render_json (
-	c_void_p,			# 
-	http_status,		# 
-	c_char_p,			# 
-	c_size_t			# 
-) -> None
+	c_void_p,			# reference to a HttpReceive instance
+	http_status,		# the response's status code
+	c_char_p,			# a string reference to the JSON body
+	c_size_t			# the JSON string value
+) -> c_uint8
 ```
 
 **Returns** 0 on success, 1 on error
@@ -248,10 +244,10 @@ http_response_render_json (
 
 ``` python
 http_response_render_file (
-	c_void_p,			# 
-	http_status,		# 
-	c_char_p			# 
-) -> None
+	c_void_p,			# reference to a HttpReceive instance
+	http_status,		# the response's status code
+	c_char_p			# the filename to be used
+) -> c_uint8
 ```
 
 **Returns** 0 on success, 1 on error
