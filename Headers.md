@@ -58,3 +58,39 @@
 |	DATE								|	Date								|	Contains the date and time at which the message was originated.												|
 |	UPGRADE								|	Upgrade								|	The standard establishes rules for upgrading or changing to a different protocol on the current client, server, transport protocol connection.			|
 |	INVALID	 							|	Undefined							|	Invalid Header																								|
+
+---
+
+**http_header_string ()** matches the **HttpHeader** value with its string representation
+
+``` python
+http_header_string (
+	HttpHeader			# the HttpHeader value to be matched
+) -> c_char_p
+```
+
+**Returns** a constant string reference to the matching **HttpHeader** string representation
+
+---
+
+**http_header_description ()** matches the **HttpHeader** value with its description
+
+``` python
+http_header_description (
+	HttpHeader			# the HttpHeader value to be matched
+) -> c_char_p
+```
+
+**Returns** a constant string reference to the matching **HttpHeader** description
+
+---
+
+**http_header_type_by_string ()** gets the correct **HttpHeader** value for the matching header string
+
+``` python
+http_header_type_by_string (
+	c_char_p			# the string reference to be matched
+) -> HttpHeader
+```
+
+**Returns** the correct **HttpHeader** value for the matching header string
