@@ -1,6 +1,6 @@
 # HTTP Response
 
-**http_response_delete ()**
+**http_response_delete ()** correctly disposes a HTTP response and all of its data
 
 ``` python
 http_response_delete (
