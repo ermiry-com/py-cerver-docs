@@ -193,7 +193,7 @@ http_request_get_body_json (
 
 ## Headers
 
-**http_request_headers_print ()**
+**http_request_headers_print ()** prints the HTTP request's headers values
 
 ``` python
 http_request_headers_print (
