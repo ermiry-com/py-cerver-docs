@@ -63,3 +63,14 @@
 |	510		|	NOT_EXTENDED                    |	Not Extended                    |
 |	511		|	NETWORK_AUTHENTICATION_REQUIRED |	Network Authentication Required |
 
+---
+
+**http_status_string ()** matches the **http_status** value with its string representation
+
+``` python
+http_status_string (
+	http_status			# the status type value to be matched
+) -> c_char_p
+```
+
+**Returns** a constant string reference to the matching **http_status** string representation
