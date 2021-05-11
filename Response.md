@@ -223,6 +223,17 @@ http_response_render_text (
 
 **Returns** 0 on success, 1 on error
 
+**Example**
+``` python
+text = "<!DOCTYPE html><html><head><meta charset=\"utf-8\" /><title>Cerver</title></head><body><h2>text_handler () works!</h2></body></html>".encode ('utf-8')
+text_len = len (text)
+
+http_response_render_text (
+	http_receive, HTTP_STATUS_OK,
+	text, text_len
+)
+```
+
 ---
 
 **http_response_render_json ()** sends the selected json back to the user. This methods takes care of generating a repsonse with application/json content type
@@ -238,6 +249,17 @@ http_response_render_json (
 
 **Returns** 0 on success, 1 on error
 
+**Example**
+``` python
+json =  "{\"msg\": \"okay\"}".encode ('utf-8')
+json_len = len (json)
+
+http_response_render_json (
+	http_receive, HTTP_STATUS_OK,
+	json, json_len
+)
+```
+
 ---
 
 **http_response_render_file ()** opens the selected file and sends it back to the user. This method takes care of generating the header based on the file values
@@ -252,9 +274,17 @@ http_response_render_file (
 
 **Returns** 0 on success, 1 on error
 
+**Example**
+``` python
+http_response_render_file (
+	http_receive, HTTP_STATUS_OK,
+	"./examples/public/index.html".encode ('utf-8')
+)
+```
+
 ## JSON
 
-**http_response_create_json ()** creates a HTTP response with the defined status code and a json data (body) that accepts additional configuration and needs to be compiled to be sent
+**http_response_create_json ()** creates a HTTP response with the defined status code and a json data (body) that is ready to be sent
 
 ``` python
 http_response_create_json (
@@ -266,9 +296,23 @@ http_response_create_json (
 
 **Returns** a new HTTP response instance
 
+**Example**
+``` python
+json =  "{\"msg\": \"okay\"}".encode ('utf-8')
+json_len = len (json)
+
+res = http_response_create_json (
+	HTTP_STATUS_OK, json, json_len
+)
+
+http_response_print (res)
+http_response_send (res, http_receive)
+http_response_delete (res)
+```
+
 ---
 
-**http_response_create_json_key_value ()** creates a HTTP response with the defined status code and a data (body) with a json message of type { key: value } that accepts additional configuration and needs to be compiled to be sent
+**http_response_create_json_key_value ()** creates a HTTP response with the defined status code and a data (body) with a json message of type { key: value } that is ready to be sent
 
 ``` python
 http_response_create_json_key_value (
@@ -279,6 +323,17 @@ http_response_create_json_key_value (
 ```
 
 **Returns** a new HTTP response instance
+
+**Example**
+``` python
+res = http_response_create_json_key_value (
+	HTTP_STATUS_OK, "msg".encode ('utf-8'), "okay".encode ('utf-8')
+)
+
+http_response_print (res)
+http_response_send (res, http_receive)
+http_response_delete (res)
+```
 
 ---
 
@@ -293,12 +348,23 @@ http_response_json_msg (
 
 **Returns** a new HTTP response instance
 
+**Example**
+``` python
+response = http_response_json_msg (
+	HTTP_STATUS_OK, "Test route works!".encode ('utf-8')
+)
+
+http_response_print (response)
+http_response_send (response, http_receive)
+http_response_delete (response)
+```
+
 ---
 
-**http_response_json_msg ()** creates and sends a HTTP json message response with the defined status code & message
+**http_response_json_msg_send ()** creates and sends a HTTP json message response with the defined status code & message
 
 ``` python
-http_response_json_msg (
+http_response_json_msg_send (
 	c_void_p,			# reference to a HttpReceive instance
 	http_status,		# the response's status code
 	c_char_p			# the JSON "your message" string value
@@ -306,6 +372,13 @@ http_response_json_msg (
 ```
 
 **Returns** 0 on success, 1 on error
+
+**Example**
+``` python
+http_response_json_msg_send (
+	http_receive, HTTP_STATUS_OK, "Hola handler!".encode ('utf-8')
+)
+```
 
 ---
 
@@ -320,6 +393,17 @@ http_response_json_error (
 
 **Returns** a new HTTP response instance
 
+**Example**
+``` python
+res = http_response_json_error (
+	HTTP_STATUS_BAD_REQUEST, "bad request".encode ('utf-8')
+)
+
+http_response_print (res)
+http_response_send (res, http_receive)
+http_response_delete (res)
+```
+
 ---
 
 **http_response_json_error_send ()** creates and sends a HTTP json error response with the defined status code & message
@@ -333,6 +417,13 @@ http_response_json_error_send (
 ```
 
 **Returns** 0 on success, 1 on error
+
+**Example**
+``` python
+http_response_json_error_send (
+	http_receive, HTTP_STATUS_BAD_REQUEST, "Missing values!".encode ('utf-8')
+)
+```
 
 ---
 
@@ -362,3 +453,11 @@ http_response_json_key_value_send (
 ```
 
 **Returns** 0 on success, 1 on error
+
+**Example**
+``` python
+http_response_json_key_value_send (
+	http_receive, HTTP_STATUS_OK,
+	"key".encode ('utf-8'), "value".encode ('utf-8')
+)
+```
