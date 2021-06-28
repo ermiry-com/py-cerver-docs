@@ -58,7 +58,7 @@ http_response_set_header (
 ``` python
 http_response_add_header (
 	c_void_p,			# reference to a HTTP response instance
-	HttpHeader,			# the HttpHeader header to be added
+	http_header,			# the http_header header to be added
 	c_char_p			# the real header value as a string reference
 ) -> c_uint8
 ```

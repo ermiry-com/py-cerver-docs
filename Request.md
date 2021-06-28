@@ -88,7 +88,7 @@ http_request_get_param_at_idx (
 ``` python
 http_request_get_header (
 	c_void_p,			# reference to a HTTP request instance
-	HttpHeader			# the header type to get
+	http_header			# the header type to get
 ) -> POINTER (String)
 ```
 
