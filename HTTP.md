@@ -382,12 +382,111 @@ http_cerver_all_stats_print (
 
 ## Admin
 
-**http_cerver_enable_admin_routes ()** enables the ability to have admin routes to fetch cerver's HTTP stats
+**http_cerver_enable_admin_routes ()** enables the ability to have admin routes to fetch cerver's HTTP stats. The initial value is HTTP_CERVER_DEFAULT_ENABLE_ADMIN
 
 ``` python
 http_cerver_enable_admin_routes (
     c_void_p,   # reference to a HttpCerver instance
     c_bool      # the value to enable or disable this option
+) -> None
+```
+
+---
+
+**http_cerver_enable_admin_info_route ()** enables the ability to have an admin info route to fetch cerver's information. The initial value is HTTP_CERVER_DEFAULT_ENABLE_ADMIN_INFO
+
+``` python
+http_cerver_enable_admin_info_route (
+    c_void_p,   # reference to a HttpCerver instance
+    c_bool      # the value to enable or disable this option
+) -> None
+```
+
+---
+
+**http_cerver_enable_admin_head_handlers ()** enables HTTP admin routes to handle HEAD requests. The initial value is HTTP_CERVER_DEFAULT_ENABLE_ADMIN_HEADS
+
+``` python
+http_cerver_enable_admin_head_handlers (
+    c_void_p,   # reference to a HttpCerver instance
+    c_bool      # the value to enable or disable this option
+) -> None
+```
+
+---
+
+**http_cerver_enable_admin_options_handlers ()** enables HTTP admin routes to handle OPTIONS requests. The initial value is HTTP_CERVER_DEFAULT_ENABLE_ADMIN_OPTIONS
+
+``` python
+http_cerver_enable_admin_options_handlers (
+    c_void_p,   # reference to a HttpCerver instance
+    c_bool      # the value to enable or disable this option
+) -> None
+```
+
+---
+
+**http_cerver_enable_admin_routes_authentication ()** enables authentication in admin routes. The initial value is HTTP_CERVER_DEFAULT_ENABLE_ADMIN_AUTH
+
+``` python
+http_cerver_enable_admin_routes_authentication (
+    c_void_p,           # reference to a HttpCerver instance
+    HttpRouteAuthType,  # the HTTP route authentication method to be used
+) -> None
+```
+
+---
+
+**http_cerver_admin_routes_auth_set_decode_data ()** sets the method to be used to decode incoming data from JWT and sets a method to delete it after use. If no delete method is set, data won't be freed
+
+``` python
+http_cerver_admin_routes_auth_set_decode_data (
+    c_void_p,           # reference to a HttpCerver instance
+	HttpDecodeData,     # the callback method used to decode data
+	HttpDeleteDecoded   # the callback method used to free decoded data
+) -> None
+```
+
+---
+
+**http_cerver_admin_routes_auth_decode_to_json ()** works like http_cerver_enable_admin_routes_authentication () but sets a method to decode data from a JWT into a json string
+
+``` python
+http_cerver_admin_routes_auth_decode_to_json (
+    c_void_p    # reference to a HttpCerver instance
+) -> None
+```
+
+---
+
+**http_cerver_admin_routes_set_authentication_handler ()** sets a method to be used to handle auth in admin routes. HTTP cerver must had been configured with HTTP_ROUTE_AUTH_TYPE_CUSTOM. Method must return 0 on success and 1 on error
+
+``` python
+http_cerver_admin_routes_set_authentication_handler (
+    c_void_p                # reference to a HttpCerver instance
+    AuthenticationHandler   # the authentication callback to be used
+) -> None
+```
+
+---
+
+**http_cerver_enable_admin_cors_headers ()** enables CORS headers in admin routes responses. Always uses admin origin's value. If there is no dedicated origin, it will dynamically set the header based on the origins whitelist. The initial value is HTTP_CERVER_DEFAULT_ENABLE_ADMIN_CORS
+
+``` python
+http_cerver_enable_admin_cors_headers (
+    c_void_p,   # reference to a HttpCerver instance
+    c_bool      # the value to enable or disable this option
+) -> None
+```
+
+---
+
+**http_cerver_admin_set_origin ()** sets the dedicated domain that will be always set in the admin responses CORS headers
+
+``` python
+http_cerver_admin_set_origin (
+    c_void_p,   # reference to a HttpCerver instance
+    c_char_p    # the domain to be used
 ) -> None
 ```
 
