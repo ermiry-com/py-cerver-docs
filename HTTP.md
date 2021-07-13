@@ -3,7 +3,8 @@
 **CatchAllHandler** = CFUNCTYPE (None, c_void_p, c_void_p) \
 **NotFoundHandler** = CFUNCTYPE (None, c_void_p, c_void_p) \
 **UploadsFilenameGenerator** = CFUNCTYPE (None, c_void_p, c_char_p, c_char_p) \
-**UploadsDirnameGenerator** = CFUNCTYPE (POINTER (String), c_void_p)
+**UploadsDirnameGenerator** = CFUNCTYPE (POINTER (String), c_void_p) \
+**HttpDeleteCustom** = CFUNCTYPE (None, c_void_p)
 
 ---
 
@@ -169,7 +170,7 @@ http_cerver_set_default_uploads_filename_generator (
 ``` python
 http_cerver_set_uploads_dir_mode (
     c_void_p,   # reference to a HttpCerver instance
-    c_uint      # the mode_t value to be used when creating uploads dirs 
+    c_uint      # the mode_t value to be used when creating uploads dirs
 ) -> None
 ```
 
@@ -370,6 +371,64 @@ http_cerver_auth_generate_bearer_jwt_json_with_value (
 
 **Returns** 0 on success, 1 on error
 
+## Data
+
+**http_cerver_get_custom_data ()** gets the HTTP cerver's custom data. This data can be safely set by the user and accessed at any time
+
+``` python
+http_cerver_get_custom_data (
+    c_void_p    # reference to a HttpCerver instance
+) -> c_void_p
+```
+
+**Returns** the reference to the HTTP cerver's custom data
+
+---
+
+**http_cerver_set_custom_data ()** sets the HTTP cerver's custom data
+
+``` python
+http_cerver_set_custom_data (
+    c_void_p,   # reference to a HttpCerver instance
+    c_void_p    # reference to the custom data
+) -> None
+```
+
+---
+
+**http_cerver_set_delete_custom_data ()** sets a custom method to delete the HTTP cerver's custom data
+
+``` python
+http_cerver_set_delete_custom_data (
+    c_void_p,           # reference to a HttpCerver instance
+    HttpDeleteCustom    # the callback method to delete the custom data  
+) -> None
+```
+
+---
+
+**http_cerver_set_default_delete_custom_data ()** sets free () as the method to delete the HTTP cerver's custom data
+
+``` python
+http_cerver_set_default_delete_custom_data (
+    c_void_p    # reference to a HttpCerver instance
+) -> None
+```
+
+## Responses
+
+**http_cerver_add_responses_header ()** adds a new global responses header. This header will be added to all the responses. If the response has the same header type, it will be used instead of the global header
+
+``` python
+http_cerver_add_responses_header (
+    c_void_p,       # reference to a HttpCerver instance
+    http_header,    # the http_header header to be added
+    c_char_p        # the real header value as a C string reference
+) -> c_uint8
+```
+
+**Returns** 0 on success, 1 on error
+
 ## Stats
 
 **http_cerver_all_stats_print ()** prints all HTTP cerver stats, general & by route
@@ -442,8 +501,8 @@ http_cerver_enable_admin_routes_authentication (
 ``` python
 http_cerver_admin_routes_auth_set_decode_data (
     c_void_p,           # reference to a HttpCerver instance
-	HttpDecodeData,     # the callback method used to decode data
-	HttpDeleteDecoded   # the callback method used to free decoded data
+    HttpDecodeData,     # the callback method used to decode data
+    HttpDeleteDecoded   # the callback method used to free decoded data
 ) -> None
 ```
 
