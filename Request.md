@@ -381,20 +381,33 @@ http_request_query_params_get_value (
 
 ## Multi-Part
 
-**http_request_multi_parts_get_value ()** searches the request's multi parts values for a value with matching key
+**http_request_multi_parts_get ()** searches the request's multi-parts for one with matching key
+
+``` python
+http_request_multi_parts_get (
+    c_void_p,   # reference to a HTTP request instance
+    c_char_p    # the key to be used to find a matching value
+) -> c_void_p
+```
+
+**Returns** a reference to the multi-part instance that should not be deleted if found, NULL if not match
+
+---
+
+**http_request_multi_parts_get_value ()** searches the request's multi-parts values for a value with matching key
 
 ``` python
 http_request_multi_parts_get_value (
     c_void_p,   # reference to a HTTP request instance
     c_char_p    # the key to be used to find a matching value
-) -> POINTER (String)
+) -> c_char_p
 ```
 
-**Returns** a constant String reference that should not be deleted if found, None if not match
+**Returns** a constant C string reference that should not be deleted if found, NULL if not match
 
 ---
 
-**http_request_multi_parts_get_filename ()** searches the request's multi parts values for a filename with matching key
+**http_request_multi_parts_get_filename ()** searches the request's multi-parts values for a filename with matching key
 
 ``` python
 http_request_multi_parts_get_filename (
@@ -407,7 +420,7 @@ http_request_multi_parts_get_filename (
 
 ---
 
-**http_request_multi_parts_get_saved_filename ()** searches the request's multi parts values for a saved filename with matching key
+**http_request_multi_parts_get_saved_filename ()** searches the request's multi-parts values for a saved filename with matching key
 
 ``` python
 http_request_multi_parts_get_saved_filename (
@@ -416,7 +429,31 @@ http_request_multi_parts_get_saved_filename (
 ) -> c_char_p
 ```
 
-**Returns** a constant c string that should not be deleted if found, None if not match
+**Returns** a constant C string reference that should not be deleted if found, None if not match
+
+---
+
+**http_request_multi_parts_iter_start ()** starts the HTTP request's multi-parts internal iterator
+
+``` python
+http_request_multi_parts_iter_start (
+    c_void_p    # reference to a HTTP request instance
+) -> c_bool
+```
+
+**Returns** true on success, false on error
+
+---
+
+**http_request_multi_parts_iter_get_next ()** gets the next request's multi-part using the iterator
+
+``` python
+http_request_multi_parts_iter_get_next (
+    c_void_p    # reference to a HTTP request instance
+) -> c_void_p
+```
+
+**Returns** NULL if at the end of the list or error
 
 ---
 
