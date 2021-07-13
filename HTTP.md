@@ -121,6 +121,28 @@ http_cerver_set_uploads_path (
 
 ---
 
+**http_cerver_generate_uploads_path ()** works like http_cerver_set_uploads_path () but can generate a custom path on the fly using variable arguments
+
+``` python
+http_cerver_generate_uploads_path (
+    c_void_p,   # reference to a HttpCerver instance
+    c_char_p	# the format to be used
+) -> None
+```
+
+---
+
+**http_cerver_set_uploads_file_mode ()** sets the mode_t to be used when creating uploads files. The default value is HTTP_CERVER_DEFAULT_UPLOADS_FILE_MODE
+
+``` python
+http_cerver_set_uploads_file_mode (
+    c_void_p,   # reference to a HttpCerver instance
+    c_uint      # the mode_t to be used when creating uploads files
+) -> None
+```
+
+---
+
 **http_cerver_set_uploads_filename_generator ()** sets a method that should generate a c string to be used to save each incoming file of any multipart request. The new filename should be placed in generated_filename with a max size of HTTP_MULTI_PART_GENERATED_FILENAME_LEN
 
 ``` python
@@ -132,12 +154,43 @@ http_cerver_set_uploads_filename_generator (
 
 ---
 
+**http_cerver_set_default_uploads_filename_generator ()** sets the HTTP cerver's uploads filename generator to be http_cerver_default_uploads_filename_generator ()
+
+``` python
+http_cerver_set_default_uploads_filename_generator (
+    c_void_p    # reference to a HttpCerver instance
+) -> None
+```
+
+---
+
+**http_cerver_set_uploads_dir_mode ()** sets the mode_t value to be used when creating uploads dirs. The default value is HTTP_CERVER_DEFAULT_UPLOADS_DIR_MODE
+
+``` python
+http_cerver_set_uploads_dir_mode (
+    c_void_p,   # reference to a HttpCerver instance
+    c_uint      # the mode_t value to be used when creating uploads dirs 
+) -> None
+```
+
+---
+
 **http_cerver_set_uploads_dirname_generator ()** sets a method to be called on every new request that will be used to generate a new directory inside the uploads path to save all the files from each request
 
 ``` python
 http_cerver_set_uploads_dirname_generator (
     c_void_p,                   # reference to a HttpCerver instance
     UploadsDirnameGenerator	    # the callback to be used
+) -> None
+```
+
+---
+
+**http_cerver_set_default_uploads_dirname_generator ()** sets the HTTP cerver's uploads dirname generator to be http_cerver_default_uploads_dirname_generator ()
+
+``` python
+http_cerver_set_default_uploads_dirname_generator (
+    c_void_p    # reference to a HttpCerver instance
 ) -> None
 ```
 
