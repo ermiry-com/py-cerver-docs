@@ -371,6 +371,29 @@ http_cerver_auth_generate_bearer_jwt_json_with_value (
 
 **Returns** 0 on success, 1 on error
 
+## Origins
+
+**http_cerver_add_origin_to_whitelist ()** adds a new domain to the HTTP cerver's origins whitelist
+
+``` python
+http_cerver_add_origin_to_whitelist (
+    c_void_p,   # reference to a HttpCerver instance
+    c_char_p    # the domain to be added to the whitelist
+) -> c_uint8
+```
+
+**Returns** 0 on success, 1 on error
+
+---
+
+**http_cerver_print_origins_whitelist ()** prints the domains in the origins whitelist
+
+``` python
+http_cerver_print_origins_whitelist (
+    c_void_p    # reference to a HttpCerver instance
+) -> None
+```
+
 ## Data
 
 **http_cerver_get_custom_data ()** gets the HTTP cerver's custom data. This data can be safely set by the user and accessed at any time
