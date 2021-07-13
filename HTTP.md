@@ -404,6 +404,26 @@ http_cerver_register_admin_file_system (
 
 ## Handler
 
+**http_receive_get_cerver_receive ()** gets the CerverReceive reference from a HttpReceive instance
+
+``` python
+http_receive_get_cerver_receive (
+    c_void_p    # reference to a HttpReceive instance
+) -> c_void_p
+```
+
+**Returns** a reference to a CerverReceive instance
+
+**http_receive_get_sock_fd ()** gets the sock fd associated to a HttpReceive instance
+
+``` python
+http_receive_get_sock_fd (
+    c_void_p    # reference to a HttpReceive instance
+) -> c_void_p
+```
+
+**Returns** the sock fd value
+
 **http_receive_get_cerver ()** gets the HttpCerver reference from a HttpReceive instance
 
 ``` python
