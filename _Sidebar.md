@@ -7,6 +7,8 @@
 - [[Files]]
 - [[Headers]]
 - [[HTTP]]
+- [[Multi]]
+- [[Origin]]
 - [[Request]]
 - [[Response]]
 - [[Route]]

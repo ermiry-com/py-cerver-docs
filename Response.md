@@ -4,7 +4,7 @@
 
 ``` python
 http_response_delete (
-	c_void_p			# reference to a HTTP response instance
+    c_void_p    # reference to a HTTP response instance
 ) -> None
 ```
 
@@ -24,7 +24,7 @@ http_response_get () -> None
 
 ``` python
 http_response_return (
-	c_void_p			# reference to a HTTP response instance
+    c_void_p    # reference to a HTTP response instance
 ) -> None
 ```
 
@@ -34,8 +34,8 @@ http_response_return (
 
 ``` python
 http_response_set_status (
-	c_void_p,			# reference to a HTTP response instance
-	http_status			# the response's status code
+    c_void_p,   # reference to a HTTP response instance
+    http_status # the response's status code
 ) -> None
 ```
 
@@ -45,9 +45,9 @@ http_response_set_status (
 
 ``` python
 http_response_set_header (
-	c_void_p,			# reference to a HTTP response instance
-	c_void_p,			# a reference to the header value to be used
-	c_size_t			# the response's header size
+    c_void_p,   # reference to a HTTP response instance
+    c_void_p,   # a reference to the header value to be used
+    c_size_t    # the response's header size
 ) -> None
 ```
 
@@ -57,9 +57,9 @@ http_response_set_header (
 
 ``` python
 http_response_add_header (
-	c_void_p,			# reference to a HTTP response instance
-	HttpHeader,			# the HttpHeader header to be added
-	c_char_p			# the real header value as a string reference
+    c_void_p,       # reference to a HTTP response instance
+    http_header,    # the http_header header to be added
+    c_char_p        # the real header value as a string reference
 ) -> c_uint8
 ```
 
@@ -67,12 +67,12 @@ http_response_add_header (
 
 ---
 
-**http_response_add_content_type_header ()** adds a HTTP_HEADER_CONTENT_TYPE header to the response
+**http_response_add_content_type_header ()** adds a "Content-Type" header to the response
 
 ``` python
 http_response_add_content_type_header (
-	c_void_p,			# reference to a HTTP response instance
-	ContentType			# the response's ContentType value
+    c_void_p,       # reference to a HTTP response instance
+    ContentType     # the response's ContentType value
 ) -> c_uint8
 ```
 
@@ -80,12 +80,113 @@ http_response_add_content_type_header (
 
 ---
 
-**http_response_add_content_length_header ()** adds a HTTP_HEADER_CONTENT_LENGTH header to the response
+**http_response_add_content_length_header ()** adds a "Content-Length" header to the response
 
 ``` python
 http_response_add_content_length_header (
-	c_void_p,			# reference to a HTTP response instance
-	c_size_t			# the response's content size
+    c_void_p,   # reference to a HTTP response instance
+    c_size_t    # the response's content size
+) -> c_uint8
+```
+
+**Returns** 0 on success, 1 on error
+
+---
+
+**http_response_add_json_headers ()** adds a "Content-Type" with value "application/json" and adds a "Content-Length" header to the response
+
+``` python
+http_response_add_json_headers (
+    c_void_p,   # reference to a HTTP response instance
+    c_size_t    # the response's content size
+) -> c_uint8
+```
+
+---
+
+**http_response_add_cors_header ()** adds an "Access-Control-Allow-Origin" header to the response
+
+``` python
+http_response_add_cors_header (
+    c_void_p,   # reference to a HTTP response instance
+    c_char_p    # the domain to be used
+) -> c_uint8
+```
+
+**Returns** 0 on success, 1 on error
+
+---
+
+**http_response_add_cors_header_from_origin ()** works like http_response_add_cors_header () but takes a HttpOrigin instead of a c string
+
+``` python
+http_response_add_cors_header_from_origin (
+    c_void_p,   # reference to a HTTP response instance
+    c_void_p    # reference to a HTTP origin instance
+) -> c_uint8
+```
+
+**Returns** 0 on success, 1 on error
+
+---
+
+**http_response_add_whitelist_cors_header ()** works like http_response_add_cors_header () but first checks if the domain matches any entry in the whitelist
+
+``` python
+http_response_add_whitelist_cors_header (
+    c_void_p,   # reference to a HTTP response instance
+    c_char_p    # the domain to be used
+) -> c_uint8
+```
+
+**Returns** 0 on success, 1 on error
+
+---
+
+**http_response_add_whitelist_cors_header_from_origin ()** works like http_response_add_whitelist_cors_header () but takes a HttpOrigin instead of a c string
+
+``` python
+http_response_add_whitelist_cors_header_from_origin (
+    c_void_p,   # reference to a HTTP response instance
+    c_void_p    # reference to a HTTP origin instance
+) -> c_uint8
+```
+
+**Returns** 0 on success, 1 on error
+
+---
+
+**http_response_add_whitelist_cors_header_from_request ()** checks if the HTTP request's "Origin" header value matches any domain in the whitelist then adds an "Access-Control-Allow-Origin" header to the response
+
+``` python
+http_response_add_whitelist_cors_header_from_request (
+    c_void_p,   # reference to a HTTP receive instance
+    c_void_p    # reference to a HTTP response instance
+) -> c_uint8
+```
+
+**Returns** 0 on success, 1 on error
+
+---
+
+**http_response_add_cors_allow_credentials_header ()** sets CORS related header "Access-Control-Allow-Credentials". This header is needed when a CORS request has an "Authorization" header
+
+``` python
+http_response_add_cors_allow_credentials_header (
+    c_void_p    # reference to a HTTP response instance
+) -> c_uint8
+```
+
+**Returns** 0 on success, 1 on error
+
+---
+
+**http_response_add_cors_allow_methods_header ()** sets CORS related header "Access-Control-Allow-Methods" to be a list of available methods. This header is needed in preflight OPTIONS request's responses
+
+``` python
+http_response_add_cors_allow_methods_header (
+    c_void_p,   # reference to a HTTP response instance
+    c_char_p    # list of available methods like "GET, HEAD, OPTIONS"
 ) -> c_uint8
 ```
 
@@ -97,9 +198,9 @@ http_response_add_content_length_header (
 
 ``` python
 http_response_set_data (
-	c_void_p,			# reference to a HTTP response instance
-	c_void_p,			# a reference to the response's body value
-	c_size_t			# the response's body size
+    c_void_p,   # reference to a HTTP response instance
+    c_void_p,   # a reference to the response's body value
+    c_size_t    # the response's body size
 ) -> None
 ```
 
@@ -109,9 +210,9 @@ http_response_set_data (
 
 ``` python
 http_response_set_data_ref (
-	c_void_p,			# reference to a HTTP response instance
-	c_void_p,			# a reference to the response's body value
-	c_size_t			# the response's body size
+    c_void_p,   # reference to a HTTP response instance
+    c_void_p,   # a reference to the response's body value
+    c_size_t    # the response's body size
 ) -> c_uint8
 ```
 
@@ -123,9 +224,9 @@ http_response_set_data_ref (
 
 ``` python
 http_response_create (
-	http_status,		# the response's status code
-	c_void_p,			# an optional string value as the response's body
-	c_size_t			# the response's body string size
+    http_status,    # the response's status code
+    c_void_p,       # an optional string value as the response's body
+    c_size_t        # the response's body string size
 ) -> c_void_p
 ```
 
@@ -137,7 +238,7 @@ http_response_create (
 
 ``` python
 http_response_compile (
-	c_void_p			# reference to a HTTP response instance
+    c_void_p    # reference to a HTTP response instance
 ) -> c_uint8
 ```
 
@@ -149,7 +250,7 @@ http_response_compile (
 
 ``` python
 http_response_print (
-	c_void_p			# reference to a HTTP response instance
+    c_void_p    # reference to a HTTP response instance
 ) -> None
 ```
 
@@ -159,8 +260,8 @@ http_response_print (
 
 ``` python
 http_response_send (
-	c_void_p,			# reference to a HTTP response instance
-	c_void_p			# reference to a HttpReceive instance
+    c_void_p,   # reference to a HTTP response instance
+    c_void_p    # reference to a HttpReceive instance
 ) -> c_uint8
 ```
 
@@ -172,8 +273,8 @@ http_response_send (
 
 ``` python
 http_response_send_split (
-	c_void_p,			# reference to a HTTP response instance
-	c_void_p			# reference to a HttpReceive instance
+    c_void_p,   # reference to a HTTP response instance
+    c_void_p    # reference to a HttpReceive instance
 ) -> c_uint8
 ```
 
@@ -185,10 +286,10 @@ http_response_send_split (
 
 ``` python
 http_response_create_and_send (
-	http_status			# reference to a HTTP response instance
-	c_void_p,			# an optional string value as the response's body
-	c_size_t,			# the response's body string size
-	c_void_p,			# reference to a HttpReceive instance
+    http_status,    # reference to a HTTP response instance
+    c_void_p,       # an optional string value as the response's body
+    c_size_t,       # the response's body string size
+    c_void_p        # reference to a HttpReceive instance
 ) -> c_uint8
 ```
 
@@ -200,11 +301,11 @@ http_response_create_and_send (
 
 ``` python
 http_send_response (
-	http_receive,		# the receive structure associated with the current request
-	status_code,		# HTTP status code value
-	body,				# value(s) to send in the response's body
-	body_len,			# size of the body to send. Defaults to None (Will be calculated)
-	content_type		# the response's body content type. If body is dict then content_type will be application/json. Defaults to text/html; charset=UTF-8
+    http_receive,   # the receive structure associated with the current request
+    status_code,    # HTTP status code value
+    body,           # value(s) to send in the response's body
+    body_len,       # size of the body to send. Defaults to None (Will be calculated)
+    content_type    # the response's body content type. If body is dict then content_type will be application/json. Defaults to text/html; charset=UTF-8
 ) -> None
 ```
 
@@ -214,10 +315,10 @@ http_send_response (
 
 ``` python
 http_response_render_text (
-	c_void_p,			# reference to a HttpReceive instance
-	http_status,		# the response's status code
-	c_char_p,			# a string reference to the TEXT body
-	c_size_t			# the TEXT string value
+    c_void_p,       # reference to a HttpReceive instance
+    http_status,    # the response's status code
+    c_char_p,       # a string reference to the TEXT body
+    c_size_t    	# the TEXT string value
 ) -> c_uint8
 ```
 
@@ -229,8 +330,8 @@ text = "<!DOCTYPE html><html><head><meta charset=\"utf-8\" /><title>Cerver</titl
 text_len = len (text)
 
 http_response_render_text (
-	http_receive, HTTP_STATUS_OK,
-	text, text_len
+    http_receive, HTTP_STATUS_OK,
+    text, text_len
 )
 ```
 
@@ -240,10 +341,10 @@ http_response_render_text (
 
 ``` python
 http_response_render_json (
-	c_void_p,			# reference to a HttpReceive instance
-	http_status,		# the response's status code
-	c_char_p,			# a string reference to the JSON body
-	c_size_t			# the JSON string value
+    c_void_p,       # reference to a HttpReceive instance
+    http_status,    # the response's status code
+    c_char_p,       # a string reference to the JSON body
+    c_size_t        # the JSON string value
 ) -> c_uint8
 ```
 
@@ -255,8 +356,8 @@ json =  "{\"msg\": \"okay\"}".encode ('utf-8')
 json_len = len (json)
 
 http_response_render_json (
-	http_receive, HTTP_STATUS_OK,
-	json, json_len
+    http_receive, HTTP_STATUS_OK,
+    json, json_len
 )
 ```
 
@@ -266,9 +367,9 @@ http_response_render_json (
 
 ``` python
 http_response_render_file (
-	c_void_p,			# reference to a HttpReceive instance
-	http_status,		# the response's status code
-	c_char_p			# the filename to be used
+    c_void_p,       # reference to a HttpReceive instance
+    http_status,    # the response's status code
+    c_char_p        # the filename to be used
 ) -> c_uint8
 ```
 
@@ -277,8 +378,8 @@ http_response_render_file (
 **Example**
 ``` python
 http_response_render_file (
-	http_receive, HTTP_STATUS_OK,
-	"./examples/public/index.html".encode ('utf-8')
+    http_receive, HTTP_STATUS_OK,
+    "./examples/public/index.html".encode ('utf-8')
 )
 ```
 
@@ -288,9 +389,9 @@ http_response_render_file (
 
 ``` python
 http_response_create_json (
-	http_status,		# the response's status code
-	c_char_p,			# a JSON string to be used as the body
-	c_size_t			# the size of the JSON string
+    http_status,    # the response's status code
+    c_char_p,       # a JSON string to be used as the body
+    c_size_t        # the size of the JSON string
 ) -> c_void_p
 ```
 
@@ -302,7 +403,7 @@ json =  "{\"msg\": \"okay\"}".encode ('utf-8')
 json_len = len (json)
 
 res = http_response_create_json (
-	HTTP_STATUS_OK, json, json_len
+    HTTP_STATUS_OK, json, json_len
 )
 
 http_response_print (res)
@@ -316,9 +417,9 @@ http_response_delete (res)
 
 ``` python
 http_response_create_json_key_value (
-	http_status,		# the response's status code
-	c_char_p,			# the JSON message "key" string value
-	c_char_p			# the JSON message "value" string value
+    http_status,    # the response's status code
+    c_char_p,       # the JSON message "key" string value
+    c_char_p        # the JSON message "value" string value
 ) -> c_void_p
 ```
 
@@ -327,7 +428,7 @@ http_response_create_json_key_value (
 **Example**
 ``` python
 res = http_response_create_json_key_value (
-	HTTP_STATUS_OK, "msg".encode ('utf-8'), "okay".encode ('utf-8')
+    HTTP_STATUS_OK, "msg".encode ('utf-8'), "okay".encode ('utf-8')
 )
 
 http_response_print (res)
@@ -341,8 +442,8 @@ http_response_delete (res)
 
 ``` python
 http_response_json_msg (
-	http_status			# the response's status code
-	c_char_p			# the JSON "your message" string value
+    http_status,    # the response's status code
+    c_char_p        # the JSON "your message" string value
 ) -> c_void_p
 ```
 
@@ -351,7 +452,7 @@ http_response_json_msg (
 **Example**
 ``` python
 response = http_response_json_msg (
-	HTTP_STATUS_OK, "Test route works!".encode ('utf-8')
+    HTTP_STATUS_OK, "Test route works!".encode ('utf-8')
 )
 
 http_response_print (response)
@@ -365,9 +466,9 @@ http_response_delete (response)
 
 ``` python
 http_response_json_msg_send (
-	c_void_p,			# reference to a HttpReceive instance
-	http_status,		# the response's status code
-	c_char_p			# the JSON "your message" string value
+    c_void_p,       # reference to a HttpReceive instance
+    http_status,    # the response's status code
+    c_char_p        # the JSON "your message" string value
 ) -> c_uint8
 ```
 
@@ -376,7 +477,7 @@ http_response_json_msg_send (
 **Example**
 ``` python
 http_response_json_msg_send (
-	http_receive, HTTP_STATUS_OK, "Hola handler!".encode ('utf-8')
+    http_receive, HTTP_STATUS_OK, "Hola handler!".encode ('utf-8')
 )
 ```
 
@@ -386,8 +487,8 @@ http_response_json_msg_send (
 
 ``` python
 http_response_json_error (
-	http_status,		# the response's status code
-	c_char_p			# the JSON "your error message" string value
+    http_status,    # the response's status code
+    c_char_p        # the JSON "your error message" string value
 ) -> c_void_p
 ```
 
@@ -396,7 +497,7 @@ http_response_json_error (
 **Example**
 ``` python
 res = http_response_json_error (
-	HTTP_STATUS_BAD_REQUEST, "bad request".encode ('utf-8')
+    HTTP_STATUS_BAD_REQUEST, "bad request".encode ('utf-8')
 )
 
 http_response_print (res)
@@ -410,9 +511,9 @@ http_response_delete (res)
 
 ``` python
 http_response_json_error_send (
-	c_void_p,			# reference to a HttpReceive instance
-	http_status,		# the response's status code
-	c_char_p			# the JSON "your error message" string value
+    c_void_p,       # reference to a HttpReceive instance
+    http_status,    # the response's status code
+    c_char_p        # the JSON "your error message" string value
 ) -> c_uint8
 ```
 
@@ -421,7 +522,7 @@ http_response_json_error_send (
 **Example**
 ``` python
 http_response_json_error_send (
-	http_receive, HTTP_STATUS_BAD_REQUEST, "Missing values!".encode ('utf-8')
+    http_receive, HTTP_STATUS_BAD_REQUEST, "Missing values!".encode ('utf-8')
 )
 ```
 
@@ -431,9 +532,9 @@ http_response_json_error_send (
 
 ``` python
 http_response_json_key_value (
-	http_status,		# the response's status code
-	c_char_p,			# the JSON message "key" string value
-	c_char_p			# the JSON message "value" string value
+    http_status,    # the response's status code
+    c_char_p,       # the JSON message "key" string value
+    c_char_p        # the JSON message "value" string value
 ) -> c_void_p
 ```
 
@@ -445,10 +546,10 @@ http_response_json_key_value (
 
 ``` python
 http_response_json_key_value_send (
-	c_void_p,			# reference to a HttpReceive instance
-	http_status,		# the response's status code
-	c_char_p,			# the JSON message "key" string value
-	c_char_p			# the JSON message "value" string value
+    c_void_p,       # reference to a HttpReceive instance
+    http_status,    # the response's status code
+    c_char_p,       # the JSON message "key" string value
+    c_char_p        # the JSON message "value" string value
 ) -> c_uint8
 ```
 
@@ -457,7 +558,7 @@ http_response_json_key_value_send (
 **Example**
 ``` python
 http_response_json_key_value_send (
-	http_receive, HTTP_STATUS_OK,
-	"key".encode ('utf-8'), "value".encode ('utf-8')
+    http_receive, HTTP_STATUS_OK,
+    "key".encode ('utf-8'), "value".encode ('utf-8')
 )
 ```

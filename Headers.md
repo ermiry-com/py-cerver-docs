@@ -61,36 +61,36 @@
 
 ---
 
-**http_header_string ()** matches the **HttpHeader** value with its string representation
+**http_header_string ()** matches the **http_header** value with its string representation
 
 ``` python
 http_header_string (
-	HttpHeader			# the HttpHeader value to be matched
+	http_header			# the http_header value to be matched
 ) -> c_char_p
 ```
 
-**Returns** a constant string reference to the matching **HttpHeader** string representation
+**Returns** a constant string reference to the matching **http_header** string representation
 
 ---
 
-**http_header_description ()** matches the **HttpHeader** value with its description
+**http_header_description ()** matches the **http_header** value with its description
 
 ``` python
 http_header_description (
-	HttpHeader			# the HttpHeader value to be matched
+	http_header			# the http_header value to be matched
 ) -> c_char_p
 ```
 
-**Returns** a constant string reference to the matching **HttpHeader** description
+**Returns** a constant string reference to the matching **http_header** description
 
 ---
 
-**http_header_type_by_string ()** gets the correct **HttpHeader** value for the matching header string
+**http_header_type_by_string ()** gets the correct **http_header** value for the matching header string
 
 ``` python
 http_header_type_by_string (
 	c_char_p			# the string reference to be matched
-) -> HttpHeader
+) -> http_header
 ```
 
-**Returns** the correct **HttpHeader** value for the matching header string
+**Returns** the correct **http_header** value for the matching header string

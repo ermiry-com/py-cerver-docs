@@ -1,41 +1,41 @@
 # Cerver
 
 ``` python
-CERVER_DEFAULT_PORT							= 7000
-CERVER_DEFAULT_USE_IPV6						= False
-CERVER_DEFAULT_CONNECTION_QUEUE				= 10
+CERVER_DEFAULT_PORT                         = 7000
+CERVER_DEFAULT_USE_IPV6                     = False
+CERVER_DEFAULT_CONNECTION_QUEUE             = 10
 
-CERVER_DEFAULT_RECEIVE_BUFFER_SIZE			= 4096
+CERVER_DEFAULT_RECEIVE_BUFFER_SIZE          = 4096
 
-CERVER_DEFAULT_REUSABLE_FLAGS				= False
+CERVER_DEFAULT_REUSABLE_FLAGS               = False
 
-CERVER_DEFAULT_POOL_THREADS					= 4
+CERVER_DEFAULT_POOL_THREADS                 = 4
 
-CERVER_DEFAULT_SOCKETS_INIT					= 10
+CERVER_DEFAULT_SOCKETS_INIT                 = 10
 
-CERVER_DEFAULT_POLL_FDS						= 128
-CERVER_DEFAULT_POLL_TIMEOUT					= 2000
+CERVER_DEFAULT_POLL_FDS                     = 128
+CERVER_DEFAULT_POLL_TIMEOUT                 = 2000
 
-CERVER_DEFAULT_MAX_INACTIVE_TIME			= 60
-CERVER_DEFAULT_CHECK_INACTIVE_INTERVAL		= 30
+CERVER_DEFAULT_MAX_INACTIVE_TIME            = 60
+CERVER_DEFAULT_CHECK_INACTIVE_INTERVAL      = 30
 
-CERVER_DEFAULT_AUTH_REQUIRED				= False
-CERVER_DEFAULT_MAX_AUTH_TRIES				= 2
+CERVER_DEFAULT_AUTH_REQUIRED                = False
+CERVER_DEFAULT_MAX_AUTH_TRIES               = 2
 
-CERVER_DEFAULT_ON_HOLD_POLL_FDS				= 64
-CERVER_DEFAULT_ON_HOLD_TIMEOUT				= 2000
-CERVER_DEFAULT_ON_HOLD_MAX_BAD_PACKETS		= 4
-CERVER_DEFAULT_ON_HOLD_CHECK_PACKETS		= False
-CERVER_DEFAULT_ON_HOLD_RECEIVE_BUFFER_SIZE	= 4096
+CERVER_DEFAULT_ON_HOLD_POLL_FDS             = 64
+CERVER_DEFAULT_ON_HOLD_TIMEOUT              = 2000
+CERVER_DEFAULT_ON_HOLD_MAX_BAD_PACKETS      = 4
+CERVER_DEFAULT_ON_HOLD_CHECK_PACKETS        = False
+CERVER_DEFAULT_ON_HOLD_RECEIVE_BUFFER_SIZE  = 4096
 
-CERVER_DEFAULT_USE_SESSIONS					= False
+CERVER_DEFAULT_USE_SESSIONS                 = False
 
-CERVER_DEFAULT_MULTIPLE_HANDLERS			= False
+CERVER_DEFAULT_MULTIPLE_HANDLERS            = False
 
-CERVER_DEFAULT_CHECK_PACKETS				= False
+CERVER_DEFAULT_CHECK_PACKETS                = False
 
-CERVER_DEFAULT_UPDATE_TICKS					= 30
-CERVER_DEFAULT_UPDATE_INTERVAL_SECS			= 1
+CERVER_DEFAULT_UPDATE_TICKS                 = 30
+CERVER_DEFAULT_UPDATE_INTERVAL_SECS         = 1
 ```
 
 **CerverType**
@@ -72,21 +72,32 @@ cerver_end () -> None
 
 ``` python
 cerver_stats_print (
-	c_void_p,			# reference to a Cerver instance
-	c_bool,				# option to print received stats
-	c_bool				# option to print sent stats
+    c_void_p,   # reference to a Cerver instance
+    c_bool,     # option to print received stats
+    c_bool      # option to print sent stats
 ) -> None
 ```
 
 ## Main
 
+**cerver_set_alias ()** sets the cerver's alias. It is primarily used to handle cerver's related threads names as they must not exceed a certain size
+
+``` python
+cerver_set_alias (
+    c_void_p,   # reference to a Cerver instance
+    c_char_p    # the alias as a C string reference
+) -> None
+```
+
+---
+
 **cerver_create_web ()** creates a new cerver of type CERVER_TYPE_WEB
 
 ``` python
 cerver_create_web (
-	c_void_p,			# the cerver's name
-	c_uint16,			# the cerver's binding port
-	c_uint16			# the cerver's connection queue
+    c_void_p,   # the cerver's name
+    c_uint16,   # the cerver's binding port
+    c_uint16    # the cerver's connection queue
 ) -> c_void_p
 ```
 
@@ -98,8 +109,8 @@ cerver_create_web (
 
 ``` python
 cerver_set_receive_buffer_size (
-	c_void_p,			# reference to a Cerver instance
-	c_size_t			# the size of the buffer in bytes
+    c_void_p,   # reference to a Cerver instance
+    c_size_t    # the size of the buffer in bytes
 ) -> None
 ```
 
@@ -109,8 +120,8 @@ cerver_set_receive_buffer_size (
 
 ``` python
 cerver_set_thpool_n_threads (
-	c_void_p,			# reference to a Cerver instance
-	c_uint16			# the number of threads to be used
+    c_void_p,   # reference to a Cerver instance
+    c_uint16    # the number of threads to be used
 ) -> None
 ```
 
@@ -120,8 +131,8 @@ cerver_set_thpool_n_threads (
 
 ``` python
 cerver_set_handler_type (
-	c_void_p,			# reference to a Cerver instance
-	CerverHandlerType	# the CerverHandlerType value to be used
+    c_void_p,           # reference to a Cerver instance
+    CerverHandlerType   # the CerverHandlerType value to be used
 ) -> None
 ```
 
@@ -131,8 +142,8 @@ cerver_set_handler_type (
 
 ``` python
 cerver_set_reusable_address_flags (
-	c_void_p,			# reference to a Cerver instance
-	c_bool				# the value to enable or disable this option
+    c_void_p,   # reference to a Cerver instance
+    c_bool      # the value to enable or disable this option
 ) -> None
 ```
 
@@ -144,7 +155,7 @@ cerver_set_reusable_address_flags (
 
 ``` python
 cerver_start (
-	c_void_p			# reference to a Cerver instance
+    c_void_p    # reference to a Cerver instance
 ) -> c_uint8
 ```
 
@@ -156,7 +167,7 @@ cerver_start (
 
 ``` python
 cerver_shutdown (
-	c_void_p			# reference to a Cerver instance
+    c_void_p    # reference to a Cerver instance
 ) -> c_uint8
 ```
 
@@ -168,7 +179,7 @@ cerver_shutdown (
 
 ``` python
 cerver_teardown (
-	c_void_p			# reference to a Cerver instance
+    c_void_p    # reference to a Cerver instance
 ) -> c_uint8
 ```
 
