@@ -14,7 +14,7 @@ IMAGE_TYPE_BMP
 
 ``` python
 files_image_type_to_string (
-	ImageType			# the image type to be matched
+	ImageType		# the image type to be matched
 ) -> c_char_p
 ```
 
@@ -22,11 +22,23 @@ files_image_type_to_string (
 
 ---
 
+**files_image_type_extension ()** matches the **ImageType** with its correct extension
+
+``` python
+files_image_type_extension (
+	ImageType		# the image type to be matched
+) -> c_char_p
+```
+
+**Returns** the matched extension as a constant string
+
+---
+
 **files_image_get_type ()** opens the file and checks its magic bytes to get the file's image type
 
 ``` python
 files_image_get_type (
-	c_char_p			# the filename to be opened
+	c_char_p		# the filename to be opened
 ) -> ImageType
 ```
 
@@ -38,7 +50,7 @@ files_image_get_type (
 
 ``` python
 files_image_get_type_by_extension (
-	c_char_p			# the string value representing a file extension
+	c_char_p		# the string value representing a file extension
 ) -> ImageType
 ```
 
@@ -46,11 +58,23 @@ files_image_get_type_by_extension (
 
 ---
 
+**files_image_is_jpeg ()** opens the file and checks for **jpg/jpeg** magic bytes
+
+``` python
+files_image_is_jpeg (
+	c_char_p		# an image filename
+) -> c_bool
+```
+
+**Returns** true if jpeg magic bytes are in file
+
+---
+
 **files_image_extension_is_jpeg ()** checks if the provided string value matches the **jpg/jpeg** extension
 
 ``` python
 files_image_extension_is_jpeg (
-	c_char_p			# the string value representing a file extension
+	c_char_p		# the string value representing a file extension
 ) -> c_bool
 ```
 
@@ -58,11 +82,23 @@ files_image_extension_is_jpeg (
 
 ---
 
+**files_image_is_png ()** opens the file and checks for **png** magic bytes
+
+``` python
+files_image_is_png (
+	c_char_p		# an image filename
+) -> c_bool
+```
+
+**Returns** true if png magic bytes are in file
+
+---
+
 **files_image_extension_is_png ()** checks if the provided string value matches the **png** extension
 
 ``` python
 files_image_extension_is_png (
-	c_char_p			# the string value representing a file extension
+	c_char_p		# the string value representing a file extension
 ) -> c_bool
 ```
 
