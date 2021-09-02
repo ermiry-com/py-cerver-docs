@@ -127,6 +127,20 @@ http_content_type_by_mime (
 
 ---
 
+---
+
+**http_content_type_by_extension ()** matches the extension string with the correct **ContentType** value
+
+``` python
+http_content_type_by_extension (
+	c_char_p			# the extension type string
+) -> ContentType
+```
+
+**Returns** the **ContentType** value that matches the extension string
+
+---
+
 **http_content_type_mime_by_extension ()** finds a matching MIME type using the provided extension
 
 ``` python
@@ -148,3 +162,15 @@ http_content_type_is_json (
 ```
 
 **Returns** true if the string value is equal to **application/json**, false if no match
+
+---
+
+**http_content_type_from_filename ()** matches the filename's extension string with the correct **ContentType** value
+
+``` python
+http_content_type_from_filename (
+	c_char_p			# a valid filename
+) -> ContentType
+```
+
+**Returns** the **ContentType** value that matches the filename's extension

@@ -309,6 +309,28 @@ http_send_response (
 ) -> None
 ```
 
+## Files
+
+**http_response_send_file ()** opens the selected file and sends it back to the client and takes care of generating the header based on the file values
+
+``` python
+http_response_send_file (
+    c_void_p,       # reference to a HttpReceive instance
+    http_status,    # the response's status code
+    c_char_p        # the filename to be used
+) -> c_uint8
+```
+
+**Returns** 0 on success, 1 on error
+
+**Example**
+``` python
+http_response_send_file (
+    http_receive, HTTP_STATUS_OK,
+    b"./examples/http/public/index.html"
+)
+```
+
 ## Render
 
 **http_response_render_text ()** sends the selected text back to the user. This methods takes care of generating a repsonse with text/html content type
@@ -326,7 +348,7 @@ http_response_render_text (
 
 **Example**
 ``` python
-text = "<!DOCTYPE html><html><head><meta charset=\"utf-8\" /><title>Cerver</title></head><body><h2>text_handler () works!</h2></body></html>".encode ('utf-8')
+text = b"<!DOCTYPE html><html><head><meta charset=\"utf-8\" /><title>Cerver</title></head><body><h2>text_handler () works!</h2></body></html>"
 text_len = len (text)
 
 http_response_render_text (
@@ -352,7 +374,7 @@ http_response_render_json (
 
 **Example**
 ``` python
-json =  "{\"msg\": \"okay\"}".encode ('utf-8')
+json =  b"{\"msg\": \"okay\"}"
 json_len = len (json)
 
 http_response_render_json (
@@ -361,14 +383,13 @@ http_response_render_json (
 )
 ```
 
----
+## Videos
 
-**http_response_render_file ()** opens the selected file and sends it back to the user. This method takes care of generating the header based on the file values
+**http_response_handle_video ()** handles the transmission of a video to the client
 
 ``` python
-http_response_render_file (
+http_response_handle_video (
     c_void_p,       # reference to a HttpReceive instance
-    http_status,    # the response's status code
     c_char_p        # the filename to be used
 ) -> c_uint8
 ```
@@ -377,15 +398,14 @@ http_response_render_file (
 
 **Example**
 ``` python
-http_response_render_file (
-    http_receive, HTTP_STATUS_OK,
-    "./examples/public/index.html".encode ('utf-8')
+http_response_handle_video (
+    http_receive, b"./data/videos/redis.webm"
 )
 ```
 
 ## JSON
 
-**http_response_create_json ()** creates a HTTP response with the defined status code and a json data (body) that is ready to be sent
+**http_response_create_json ()** creates a HTTP response with the defined status code with a custom json message body
 
 ``` python
 http_response_create_json (
@@ -395,20 +415,19 @@ http_response_create_json (
 ) -> c_void_p
 ```
 
-**Returns** a new HTTP response instance
+**Returns** a new HTTP response instance ready to be sent
 
 **Example**
 ``` python
-json =  "{\"msg\": \"okay\"}".encode ('utf-8')
-json_len = len (json)
+json_res = b"{\"msg\": \"okay\"}"
+json_len = len (json_res)
 
-res = http_response_create_json (
-    HTTP_STATUS_OK, json, json_len
+response = http_response_create_json (
+    HTTP_STATUS_OK, json_res, json_len
 )
 
-http_response_print (res)
-http_response_send (res, http_receive)
-http_response_delete (res)
+http_response_send (response, http_receive)
+http_response_delete (response)
 ```
 
 ---
@@ -427,13 +446,209 @@ http_response_create_json_key_value (
 
 **Example**
 ``` python
-res = http_response_create_json_key_value (
-    HTTP_STATUS_OK, "msg".encode ('utf-8'), "okay".encode ('utf-8')
+response = http_response_create_json_key_value (
+    HTTP_STATUS_OK, b"msg", b"okay"
 )
 
-http_response_print (res)
-http_response_send (res, http_receive)
-http_response_delete (res)
+http_response_print (response)
+http_response_send (response, http_receive)
+http_response_delete (response)
+```
+
+---
+
+**http_response_json_int_value ()** creates a HTTP response with the defined status code with a json body of type { "key": int_value }
+
+``` python
+http_response_json_int_value (
+    http_status,    # the response's status code
+    c_char_p,       # the JSON "key" string value
+    c_int           # the int value to be used
+) -> c_void_p
+```
+
+**Returns** a new HTTP response instance ready to be sent
+
+**Example**
+``` python
+value = 18
+response = http_response_json_int_value (
+    HTTP_STATUS_OK, b"integer", value
+)
+
+http_response_send (response, http_receive)
+http_response_delete (response)
+```
+
+---
+
+**http_response_json_int_value_send ()** sends a HTTP response with custom status code with a json body of type { "key": int_value }
+
+``` python
+http_response_json_int_value_send (
+    c_void_p,       # reference to a HttpReceive instance
+    http_status,    # the response's status code
+    c_char_p,       # the JSON "key" string value
+    c_int           # the int value to be used
+) -> c_void_p
+```
+
+**Returns** 0 on success, 1 on error
+
+**Example**
+``` python
+value = 18
+http_response_json_int_value_send (
+    http_receive, HTTP_STATUS_OK,
+    b"integer", value
+)
+```
+
+---
+
+**http_response_json_large_int_value ()** creates a HTTP response with the defined status code with a json body of type { "key": large_int_value }
+
+``` python
+http_response_json_large_int_value (
+    http_status,    # the response's status code
+    c_char_p,       # the JSON "key" string value
+    c_long          # the large int value to be used
+) -> c_void_p
+```
+
+**Returns** a new HTTP response instance ready to be sent
+
+**Example**
+``` python
+value = 1800000
+response = http_response_json_large_int_value (
+    HTTP_STATUS_OK, b"large", value
+)
+
+http_response_send (response, http_receive)
+http_response_delete (response)
+```
+
+---
+
+**http_response_json_large_int_value_send ()** sends a HTTP response with custom status code with a json body of type { "key": large_int_value }
+
+``` python
+http_response_json_large_int_value_send (
+    c_void_p,       # reference to a HttpReceive instance
+    http_status,    # the response's status code
+    c_char_p,       # the JSON "key" string value
+    c_long          # the large int value to be used
+) -> c_void_p
+```
+
+**Returns** 0 on success, 1 on error
+
+**Example**
+``` python
+value = 1800000
+http_response_json_large_int_value_send (
+    http_receive, HTTP_STATUS_OK,
+    b"large", value
+)
+```
+
+---
+
+**http_response_json_real_value ()** creates a HTTP response with the defined status code with a json body of type { "key": double_value }
+
+``` python
+http_response_json_real_value (
+    http_status,    # the response's status code
+    c_char_p,       # the JSON "key" string value
+    c_double        # the real value to be used
+) -> c_void_p
+```
+
+**Returns** a new HTTP response instance ready to be sent
+
+**Example**
+``` python
+value = 18.123
+response = http_response_json_real_value (
+    HTTP_STATUS_OK, b"real", value
+)
+
+http_response_send (response, http_receive)
+http_response_delete (response)
+```
+
+---
+
+**http_response_json_real_value_send ()** sends a HTTP response with custom status code with a json body of type { "key": double_value }
+
+``` python
+http_response_json_real_value_send (
+    c_void_p,       # reference to a HttpReceive instance
+    http_status,    # the response's status code
+    c_char_p,       # the JSON "key" string value
+    c_double        # the real value to be used
+) -> c_void_p
+```
+
+**Returns** 0 on success, 1 on error
+
+**Example**
+``` python
+value = 18.123
+http_response_json_real_value_send (
+    http_receive, HTTP_STATUS_OK,
+    b"real", value
+)
+```
+
+---
+
+**http_response_json_bool_value ()** creates a HTTP response with the defined status code with a json body of type { "key": bool_value }
+
+``` python
+http_response_json_bool_value (
+    http_status,    # the response's status code
+    c_char_p,       # the JSON "key" string value
+    c_bool          # the bool value to be used
+) -> c_void_p
+```
+
+**Returns** a new HTTP response instance ready to be sent
+
+**Example**
+``` python
+value = True
+response = http_response_json_bool_value (
+    HTTP_STATUS_OK, b"bool", value
+)
+
+http_response_send (response, http_receive)
+http_response_delete (response)
+```
+
+---
+
+**http_response_json_bool_value_send ()** sends a HTTP response with custom status code with a json body of type { "key": bool_value }
+
+``` python
+http_response_json_bool_value_send (
+    c_void_p,       # reference to a HttpReceive instance
+    http_status,    # the response's status code
+    c_char_p,       # the JSON "key" string value
+    c_bool          # the bool value to be used
+) -> c_void_p
+```
+
+**Returns** 0 on success, 1 on error
+
+**Example**
+``` python
+value = True
+http_response_json_bool_value_send (
+    http_receive, HTTP_STATUS_OK,
+    b"bool", value
+)
 ```
 
 ---
@@ -452,7 +667,7 @@ http_response_json_msg (
 **Example**
 ``` python
 response = http_response_json_msg (
-    HTTP_STATUS_OK, "Test route works!".encode ('utf-8')
+    HTTP_STATUS_OK, b"Test route works!"
 )
 
 http_response_print (response)
@@ -477,7 +692,7 @@ http_response_json_msg_send (
 **Example**
 ``` python
 http_response_json_msg_send (
-    http_receive, HTTP_STATUS_OK, "Hola handler!".encode ('utf-8')
+    http_receive, HTTP_STATUS_OK, b"Hola handler!"
 )
 ```
 
@@ -497,7 +712,7 @@ http_response_json_error (
 **Example**
 ``` python
 res = http_response_json_error (
-    HTTP_STATUS_BAD_REQUEST, "bad request".encode ('utf-8')
+    HTTP_STATUS_BAD_REQUEST, b"bad request"
 )
 
 http_response_print (res)
@@ -522,7 +737,7 @@ http_response_json_error_send (
 **Example**
 ``` python
 http_response_json_error_send (
-    http_receive, HTTP_STATUS_BAD_REQUEST, "Missing values!".encode ('utf-8')
+    http_receive, HTTP_STATUS_BAD_REQUEST, b"Missing values!"
 )
 ```
 
@@ -559,6 +774,6 @@ http_response_json_key_value_send (
 ``` python
 http_response_json_key_value_send (
     http_receive, HTTP_STATUS_OK,
-    "key".encode ('utf-8'), "value".encode ('utf-8')
+    b"key", b"value"
 )
 ```
