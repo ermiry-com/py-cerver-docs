@@ -297,15 +297,15 @@ http_response_create_and_send (
 
 ---
 
-**http_send_response ()** Function to create and send a HTTP response
+**http_send_response ()** creates and sends a HTTP response based on the supplied body
 
 ``` python
 http_send_response (
-    http_receive,   # the receive structure associated with the current request
-    status_code,    # HTTP status code value
-    body,           # value(s) to send in the response's body
-    body_len,       # size of the body to send. Defaults to None (Will be calculated)
-    content_type    # the response's body content type. If body is dict then content_type will be application/json. Defaults to text/html; charset=UTF-8
+    http_receive: c_void_p,
+    status_code: http_status,
+	body=None,
+    body_len=None,
+	content_type=HTTP_CONTENT_TYPE_HTML
 ) -> None
 ```
 
