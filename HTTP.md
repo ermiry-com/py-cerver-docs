@@ -1,4 +1,4 @@
-# HTTP Response
+# HTTP
 
 **CatchAllHandler** = CFUNCTYPE (None, c_void_p, c_void_p) \
 **NotFoundHandler** = CFUNCTYPE (None, c_void_p, c_void_p) \
@@ -17,6 +17,23 @@ http_cerver_get (
 ```
 
 **Returns** a reference to a HttpCerver instance
+
+---
+
+**http_cerver_configuration ()** creates a HTTP cerver with custom configuration
+
+``` python
+http_cerver_configuration (
+    name: str,      # the HTTP service's name
+    port=8080,      # port where service will be exposed
+    connection_queue=10,
+	buffer_size=4096,
+    n_threads=4,
+	reusable_address_flags=True
+) -> c_void_p
+```
+
+**Returns** a reference to the created Cerver instance
 
 ## Public
 
@@ -54,6 +71,38 @@ http_receive_public_path_remove (
 ```
 
 **Returns** 0 on success, 1 on error
+
+---
+
+**http_create_route ()** creates and registers a new HTTP route
+
+``` python
+http_create_route (
+    http_cerver: c_void_p,
+    request_method: RequestMethod,
+	route_path: str,
+    handler: HttpHandler,
+	auth_method=HTTP_ROUTE_AUTH_TYPE_NONE
+) -> c_void_p
+```
+
+**Returns** a reference to the registered HttpRoute instance
+
+---
+
+**http_create_child_route ()** creates and registers a child route to a parent route. The parent's path will be added to the child's path
+
+``` python
+http_create_child_route (
+    parent: c_void_p,
+    request_method: RequestMethod,
+	route_path: str,
+    handler: HttpHandler,
+	auth_method=HTTP_ROUTE_AUTH_TYPE_NONE
+) -> c_void_p
+```
+
+**Returns** reference to the child HttpRoute instance
 
 ## Routes
 
@@ -370,6 +419,55 @@ http_cerver_auth_generate_bearer_jwt_json_with_value (
 ```
 
 **Returns** 0 on success, 1 on error
+
+---
+
+**http_cerver_auth_configuration ()** configurates the HTTP service's auth JWT algorithm and keys
+
+``` python
+http_cerver_auth_configuration (
+    http_cerver: c_void_p,
+    jwt_algorithm=JWT_ALG_NONE,
+	priv_key_filename=None,
+    pub_key_filename=None
+) -> None
+```
+
+---
+
+**http_jwt_create ()** creates a HttpJwt instance with custom values. The returned HttpJwt instance must be deleted with http_cerver_auth_jwt_delete () to avoid memory leaks
+
+``` python
+http_jwt_create (
+    values      # the actual Bearer JWT values
+) -> c_void_p
+```
+
+**Returns** reference to a newly created HttpJwt instance
+
+---
+
+**http_jwt_create_and_send ()** creates and sends a Bearer JWT
+
+``` python
+http_jwt_create_and_send (
+    http_receive: c_void_p,
+	status_code=HTTP_STATUS_OK,
+	values={}
+) -> None
+```
+
+---
+
+**http_jwt_token_decode ()** loads the decoded data from a JWT into a dict
+
+``` python
+http_jwt_token_decode (
+    request: c_void_p   # reference to a HTTP request instance
+) -> c_void_p
+```
+
+**Returns** the JWT decoded data as a dict
 
 ## Origins
 

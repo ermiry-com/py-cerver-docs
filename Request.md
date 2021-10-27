@@ -321,28 +321,40 @@ http_request_get_body_values (
 
 ---
 
+**http_get_params_list ()** gets all the HTTP request's params as a list
+
+``` python
+http_get_params_list (
+    request: c_void_p # reference to a HTTP request instance
+) -> c_void_p
+```
+
+**Returns** the HTTP request's params as a list
+
+---
+
 **http_request_get_query_value ()** gets a query param from the HTTP request
 
 ``` python
 http_request_get_query_value (
-    values,     # key-value pairs from x-www-form-urlencoded data or query params
-    query_name	# the key used to find a matching value
+    values: c_void_p, # key-value pairs parsed from x-www-form-urlencoded data or query params
+    query_name: str   # the key used to find a matching value
 ) -> c_void_p
 ```
 
-**Returns**
+**Returns** the matching query value for the supplied key
 
 ---
 
-**http_request_get_body_json ()** gets the HTTP request's body in a dictionary
+**http_request_get_body_json ()** gets the HTTP request JSON body as a dictionary
 
 ``` python
 http_request_get_body_json (
-    request     # reference to a HTTP request instance
-) -> Python Dictionary
+    request: c_void_p # reference to a HTTP request instance
+) -> dict
 ```
 
-**Returns**
+**Returns** a dict with the HTTP request's JSON body
 
 ## Headers
 
