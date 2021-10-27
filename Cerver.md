@@ -91,6 +91,34 @@ cerver_set_alias (
 
 ---
 
+**cerver_set_welcome_msg ()** sets the cerver's welcome message that will be sent to the clients that connect to the service using the cerver protocol
+
+``` python
+cerver_set_welcome_msg (
+    c_void_p,   # reference to a Cerver instance
+    c_char_p    # the message as a C string reference
+) -> None
+```
+
+---
+
+**cerver_create ()** creates a new cerver of the specified type
+
+``` python
+cerver_create (
+    CerverType, # the cerver's type
+    c_void_p,   # the cerver's name
+    c_uint16,   # the cerver's binding port
+    c_int,      # the protocol the service will handle
+    c_bool,     # enables IPv6 handling
+    c_uint16    # the cerver's connection queue
+) -> c_void_p
+```
+
+**Returns** a reference to the created Cerver instance
+
+---
+
 **cerver_create_web ()** creates a new cerver of type CERVER_TYPE_WEB
 
 ``` python
@@ -147,7 +175,46 @@ cerver_set_reusable_address_flags (
 ) -> None
 ```
 
-**Returns**
+## Update
+
+``` python
+class CerverUpdate (Structure):
+	_fields_ = [
+		("cerver", c_void_p),
+		("args", c_void_p)
+	]
+```
+
+**CerverUpdateCb** = CFUNCTYPE (None, c_void_p) \
+**CerverUpdateDelete** = CFUNCTYPE (c_void_p, c_void_p)
+
+---
+
+**cerver_set_update ()** sets a custom method to be executed multiple times per second (ticks). A new thread will be created that will call your method each tick. The update args will be passed to your method as a CerverUpdate reference and will only be deleted at cerver teardown if you set a delete method
+
+``` python
+cerver_set_update (
+    c_void_p,           # reference to a Cerver instance
+    CerverUpdateCb,     # the actual update method
+    c_void_p,           # the update method arguments
+    CerverUpdateDelete, # method to delete the arguments
+    c_uint              # amount of ticks per second
+) -> None
+```
+
+---
+
+**cerver_set_update_interval ()** sets a custom method to be executed every x seconds. A new thread will be created that will call your method every x seconds. The update args will be passed to your method as a CerverUpdate reference and will only be deleted at cerver teardown if you set a delete method
+
+``` python
+cerver_set_update_interval (
+    c_void_p,           # reference to a Cerver instance
+    CerverUpdateCb,     # the actual update method
+    c_void_p,           # the update method arguments
+    CerverUpdateDelete, # method to delete the arguments
+    c_uint              # interval in seconds
+) -> None
+```
 
 ## Start
 
