@@ -1,511 +1,74 @@
-# HTTP Request
-
-**RequestMethod**
-
-REQUEST_METHOD_DELETE \
-REQUEST_METHOD_GET \
-REQUEST_METHOD_HEAD \
-REQUEST_METHOD_POST \
-REQUEST_METHOD_PUT \
-REQUEST_METHOD_CONNECT \
-REQUEST_METHOD_OPTIONS \
-REQUEST_METHOD_TRACE
-
-**HttpDeleteDecoded** = CFUNCTYPE (None, c_void_p) \
-**HttpDeleteCustom** = CFUNCTYPE (None, c_void_p)
-
----
-
-**http_request_get_method ()** gets the HTTP request's method (GET, POST, ...)
-
-``` python
-http_request_get_method (
-    c_void_p    # reference to a HTTP request instance
-) -> RequestMethod
-```
-
-**Returns** a RequestMethod value representing the request's method
-
----
-
-**http_request_get_url ()** gets the HTTP request's url string value
-
-``` python
-http_request_get_url (
-    c_void_p    # reference to a HTTP request instance
-) -> POINTER (String)
-```
-
-**Returns** the request's url as a String reference
-
----
-
-**http_request_get_query ()** gets the HTTP request's query string value
-
-``` python
-http_request_get_query (
-    c_void_p    # reference to a HTTP request instance
-) -> POINTER (String)
-```
-
-**Returns** the request's query as a String reference
-
----
-
-**http_request_get_query_params ()** gets the HTTP request's query params list
-
-``` python
-http_request_get_query_params (
-    c_void_p    # reference to a HTTP request instance
-) -> c_void_p
-```
-
-**Returns** a list with the HTTP request's query params
-
----
-
-**http_request_get_n_params ()** gets how many query params are in the HTTP request
-
-``` python
-http_request_get_n_params (
-    c_void_p    # reference to a HTTP request instance
-) -> c_uint
-```
-
-**Returns** the number of query params in the HTTP request
-
----
-
-**http_request_get_param_at_idx ()** gets the HTTP request's x query param
-
-``` python
-http_request_get_param_at_idx (
-    c_void_p,   # reference to a HTTP request instance
-    c_uint      # the idx of the param to get
-) -> c_uint
-```
-
-**Returns** a String reference of the selected param, None if the idx was invalid
-
----
-
-**http_request_get_header ()** gets the specified HTTP header value from the HTTP request
-
-``` python
-http_request_get_header (
-    c_void_p        # reference to a HTTP request instance
-    http_header     # the header type to get
-) -> POINTER (String)
-```
-
-**Returns** a String reference to the request's header, None if the request type was not found or is invalid
-
----
-
-**http_request_get_content_type ()** gets the HTTP request's content type value from the request's headers
-
-``` python
-http_request_get_content_type (
-    c_void_p    # reference to a HTTP request instance
-) -> ContentType
-```
-
-**Returns** a ContentType value taken from the request's headers
-
----
-
-**http_request_get_content_type_string ()** gets the HTTP request's HTTP_HEADER_CONTENT_TYPE String reference
-
-``` python
-http_request_get_content_type_string (
-    c_void_p    # reference to a HTTP request instance
-) -> POINTER (String)
-```
-
-**Returns** a String reference taken from the request's header
-
----
-
-**http_request_content_type_is_json ()** checks if the HTTP request's content type is **application/json**
-
-``` python
-http_request_content_type_is_json (
-    c_void_p    # reference to a HTTP request instance
-) -> c_bool
-```
-
-**Returns** true if the request's content type is **application/json**
-
----
-
-**http_request_get_decoded_data ()** gets the HTTP request's decoded data. This data was created by the HTTP route's decode_data method configured by http_route_set_decode_data () or http_route_set_decode_data_into_json ()
-
-``` python
-http_request_get_decoded_data (
-    c_void_p    # reference to a HTTP request instance
-) -> c_void_p
-```
-
-**Returns** a reference to the request's decoded data
-
----
-
-**http_request_set_decoded_data ()** sets the HTTP request's decoded data
-
-``` python
-http_request_set_decoded_data (
-    c_void_p,   # reference to a HTTP request instance
-    c_void_p    # reference to the decoded data
-) -> None
-```
-
----
-
-**http_request_set_delete_decoded_data ()** sets a custom method to delete the HTTP request's decoded data
-
-``` python
-http_request_set_delete_decoded_data (
-    c_void_p,           # reference to a HTTP request instance
-    HttpDeleteDecoded   # the delete decoded data callback
-) -> None
-```
-
----
-
-**http_request_set_default_delete_decoded_data ()** sets free () as the method to delete the HTTP request's decoded data
-
-``` python
-http_request_set_default_delete_decoded_data (
-    c_void_p    # reference to a HTTP request instance
-) -> None
-```
-
----
-
-**http_request_get_custom_data ()** gets the HTTP request's custom data. This data can be safely set by the user and accessed at any time
-
-``` python
-http_request_get_custom_data (
-    c_void_p    # reference to a HTTP request instance
-) -> c_void_p
-```
-
-**Returns** a reference to the request's custom data
-
----
-
-**http_request_set_custom_data ()** sets the HTTP request's custom data
-
-``` python
-http_request_set_custom_data (
-    c_void_p,   # reference to a HTTP request instance
-    c_void_p    # reference to the custom data
-) -> None
-```
-
----
-
-**http_request_set_delete_custom_data ()** sets a custom method to delete the HTTP request's custom data
-
-``` python
-http_request_set_delete_custom_data (
-    c_void_p,           # reference to a HTTP request instance
-    HttpDeleteCustom    # the delete custom data callback
-) -> None
-```
-
----
-
-**http_request_set_default_delete_custom_data ()** sets free () as the method to delete the HTTP request's custom data
-
-``` python
-http_request_set_default_delete_custom_data (
-    c_void_p    # reference to a HTTP request instance
-) -> None
-```
-
----
-
-**http_request_get_current_mpart ()** gets the HTTP request's current multi-part structure
-
-``` python
-http_request_get_current_mpart (
-    c_void_p    # reference to a HTTP request instance
-) -> c_void_p
-```
-
-**Returns** reference to the request's current multi-part value
-
----
-
-**http_request_get_n_files ()** gets the HTTP request's multi-part files count
-
-``` python
-http_request_get_n_files (
-    c_void_p    # reference to a HTTP request instance
-) -> c_uint8
-```
-
-**Returns** how many multi-part files were handled in the request
-
----
-
-**http_request_get_n_values ()** gets the HTTP request's multi-part values count
-
-``` python
-http_request_get_n_values (
-    c_void_p    # reference to a HTTP request instance
-) -> c_uint8
-```
-
-**Returns** how many multi-part values were handled by the request
-
----
-
-**http_request_get_dirname_len ()** gets the HTTP request's multi-part files dirname length
-
-``` python
-http_request_get_dirname_len (
-    c_void_p    # reference to a HTTP request instance
-) -> c_int
-```
-
-**Returns** the HTTP request's multi-part files dirname length
-
----
-
-**http_request_get_dirname ()** gets the HTTP request's multi-part files directory generated by uploads_dirname_generator ()
-
-``` python
-http_request_get_dirname (
-    c_void_p    # reference to a HTTP request instance
-) -> c_char_p
-```
-
-**Returns** the HTTP request's multi-part files directory
-
----
-
-**http_request_set_dirname ()** sets the HTTP request's multi-part files directory
-
-``` python
-http_request_set_dirname (
-    c_void_p,   # reference to a HTTP request instance
-    c_char_p    # the format to be used
-) -> None
-```
-
----
-
-**http_request_get_body ()** gets the HTTP request's body
-
-``` python
-http_request_get_body (
-    c_void_p    # reference to a HTTP request instance
-) -> POINTER (String)
-```
-
-**Returns** a String reference to the HTTP request's body
-
----
-
-**http_request_get_body_values ()** gets the HTTP request's body values
-
-``` python
-http_request_get_body_values (
-    c_void_p    # reference to a HTTP request instance
-) -> c_void_p
-```
-
-**Returns** a list containing the HTTP request's body values
-
----
-
-**http_get_params_list ()** gets all the HTTP request's params as a list
-
-``` python
-http_get_params_list (
-    request: c_void_p # reference to a HTTP request instance
-) -> c_void_p
-```
-
-**Returns** the HTTP request's params as a list
-
----
-
-**http_request_get_query_value ()** gets a query param from the HTTP request
-
-``` python
-http_request_get_query_value (
-    values: c_void_p, # key-value pairs parsed from x-www-form-urlencoded data or query params
-    query_name: str   # the key used to find a matching value
-) -> c_void_p
-```
-
-**Returns** the matching query value for the supplied key
-
----
-
-**http_request_get_body_json ()** gets the HTTP request JSON body as a dictionary
-
-``` python
-http_request_get_body_json (
-    request: c_void_p # reference to a HTTP request instance
-) -> dict
-```
-
-**Returns** a dict with the HTTP request's JSON body
-
-## Headers
-
-**http_request_headers_print ()** prints the HTTP request's headers values
-
-``` python
-http_request_headers_print (
-    c_void_p    # reference to a HTTP request instance
-) -> None
-```
-
-**Returns**
+# Request
+
+The handler of an endpoint gets the `request`, and reads it with the functions of `cerver.http.requests`.
+
+| Module | What it has |
+|---|---|
+| `cerver.http.requests.values` | The values of a request as Python text (`str | None`) |
+| `cerver.http.requests.getters` | The method, the url, the headers, the id, the client ip, the content type, the decoded data and the custom data |
+| `cerver.http.requests.params` | The params of the route |
+| `cerver.http.requests.query` | The query and its values |
+| `cerver.http.requests.body` | The body, and the body as JSON |
+| `cerver.http.requests.multipart` | The parts and files of a multipart request |
+| `cerver.http.requests.methods` | `REQUEST_METHOD_*` and `http_request_method_str ()` |
+| `cerver.http.multipart` | The functions of a single part (`MultiPart`) |
+
+## Values as Python text
+
+The raw getters return the `String` of cerver (see [[Utils]]); the helpers of `values` read it, with its length, and return a `str`, or `None` when the value is missing or is not UTF-8:
+
+| Helper | Value |
+|---|---|
+| `http_request_get_url_string (request)` | The path, without the query |
+| `http_request_get_query_string (request)` | The raw query |
+| `http_request_get_param_string (request, index)` | A param of the route by its position, percent-decoded |
+| `http_request_get_named_param_string (request, name)` | A param of the route by its name |
+| `http_request_get_header_string (request, HTTP_HEADER_USER_AGENT)` | A header that cerver knows, by its type |
+| `http_request_get_custom_header_string (request, "X-Custom")` | Any other header, by its name in any case |
+| `http_request_get_query_value_string (request, "page")` | A value of the query |
+| `http_request_get_body_string (request)` | The body as text |
+| `http_request_get_id_string (request)` | The id of the request (see request ids in [[HTTP]]) |
+| `http_request_get_client_ip_string (request)` | The address of the client, from the trusted proxies when there are |
+| `http_request_get_decoded_string (request)` / `http_request_get_decoded_json (request)` | The decoded data of the JWT, as text or as a `dict` |
+| `http_request_content_type_is_multi_part (request)` | `True` for a `multipart/form-data` body |
+
+## Params
+
+`http_get_params_dict (request)` returns every param by its name, and `http_get_params_list (request)` in the order of the route. `http_request_get_n_params ()` and `http_request_get_param_at_idx ()` are the raw ones.
 
 ## Query
 
-**http_request_query_params_print ()** prints the request's query params values
-
 ``` python
-http_request_query_params_print (
-    c_void_p    # reference to a HTTP request instance
-) -> None
+query = http_request_get_query_params (request)
+
+text = http_request_get_query_value (query, "text")                 # str | None
+page = http_request_get_int_query_value (query, "page")             # int | None, None if it is not a number
+ratio = http_request_get_float_query_value (query, "ratio")
+active = http_request_get_bool_query_value (query, "active")        # "true", "yes", "1", "false", ...
 ```
 
----
-
-**http_request_query_params_get_value ()** searches the request's query params values for the specified key
-
-``` python
-http_request_query_params_get_value (
-    c_void_p,   # reference to a HTTP request instance
-    c_char_p    # the key to be used to find a matching value
-) -> POINTER (String)
-```
-
-**Returns** the matching query param value for the specified key, None if no match or no query params
-
-## Multi-Part
-
-**http_request_multi_parts_get ()** searches the request's multi-parts for one with matching key
-
-``` python
-http_request_multi_parts_get (
-    c_void_p,   # reference to a HTTP request instance
-    c_char_p    # the key to be used to find a matching value
-) -> c_void_p
-```
-
-**Returns** a reference to the multi-part instance that should not be deleted if found, NULL if not match
-
----
-
-**http_request_multi_parts_get_value ()** searches the request's multi-parts values for a value with matching key
-
-``` python
-http_request_multi_parts_get_value (
-    c_void_p,   # reference to a HTTP request instance
-    c_char_p    # the key to be used to find a matching value
-) -> c_char_p
-```
-
-**Returns** a constant C string reference that should not be deleted if found, NULL if not match
-
----
-
-**http_request_multi_parts_get_filename ()** searches the request's multi-parts values for a filename with matching key
-
-``` python
-http_request_multi_parts_get_filename (
-    c_void_p,   # reference to a HTTP request instance
-    c_char_p    # the key to be used to find a matching value
-) -> c_char_p
-```
-
-**Returns** a constant c string that should not be deleted if found, None if not match
-
----
-
-**http_request_multi_parts_get_saved_filename ()** searches the request's multi-parts values for a saved filename with matching key
-
-``` python
-http_request_multi_parts_get_saved_filename (
-    c_void_p,   # reference to a HTTP request instance
-    c_char_p    # the key to be used to find a matching value
-) -> c_char_p
-```
-
-**Returns** a constant C string reference that should not be deleted if found, None if not match
-
----
-
-**http_request_multi_parts_iter_start ()** starts the HTTP request's multi-parts internal iterator
-
-``` python
-http_request_multi_parts_iter_start (
-    c_void_p    # reference to a HTTP request instance
-) -> c_bool
-```
-
-**Returns** true on success, false on error
-
----
-
-**http_request_multi_parts_iter_get_next ()** gets the next request's multi-part using the iterator
-
-``` python
-http_request_multi_parts_iter_get_next (
-    c_void_p    # reference to a HTTP request instance
-) -> c_void_p
-```
-
-**Returns** NULL if at the end of the list or error
-
----
-
-**http_request_multi_part_keep_files ()** signals that the files referenced by the request should be kept, so they won't be deleted after the request has ended. Files only get deleted if the HTTP cerver's uploads_delete_when_done attribute is set to TRUE
-
-``` python
-http_request_multi_part_keep_files (
-    c_void_p    # reference to a HTTP request instance
-) -> None
-```
-
----
-
-**http_request_multi_part_discard_files ()** discards all the saved files from the multipart request
-
-``` python
-http_request_multi_part_discard_files (
-    c_void_p    # reference to a HTTP request instance
-) -> None
-```
-
----
-
-**http_request_multi_parts_print ()** prints the request's multi-parts values
-
-``` python
-http_request_multi_parts_print (
-    c_void_p    # reference to a HTTP request instance
-) -> None
-```
+The typed validators of [[Validation]] read the query and write the errors of the request.
 
 ## Body
 
-**http_request_body_get_value ()** search request's body values for matching value by key
+`http_request_get_body_json (request)` returns the body as a `dict`, or `None` when there is no body or it is not a JSON object. `http_request_get_body_string ()` returns the text, and `http_request_get_body ()` the raw `String`.
+
+## Multipart
+
+An endpoint with `modifier=HTTP_ROUTE_MODIFIER_MULTI_PART` receives multipart bodies; the files are saved in the uploads path of the cerver (see [[HTTP]]):
 
 ``` python
-http_request_body_get_value (
-    c_void_p,   # reference to a HTTP request instance
-    c_char_p    # the key to be used to find a matching value
-) -> POINTER (String)
+image = http_request_multi_parts_get_file (request, "image")
+# {"original": "photo.png", "saved": "/uploads/1/photo.png", "generated": ...}, None without the part
+
+name = http_request_multi_parts_get_value (request, b"name")      # bytes | None, the value of a part that is not a file
+
+for mpart in http_request_multi_parts (request):
+	http_multi_part_print (mpart)
 ```
 
-**Returns** a constant String reference that should not be deleted if match, None if not found
+The files are deleted when the request ends when `http_cerver_set_uploads_delete_when_done ()` is on, unless the handler keeps them with `http_request_multi_part_keep_files ()`.
+
+## Custom data
+
+`http_request_set_custom_data ()` and `http_request_get_custom_data ()` keep a pointer in the request, for a middleware that passes a value to the handler; a Python value is kept in a `dict` by request instead (see `examples/middleware/chain.py`).
