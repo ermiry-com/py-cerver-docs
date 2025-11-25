@@ -1,23 +1,16 @@
 - [[Home]]
 - [[Quickstart]]
+- [[Examples]]
+- [[Migration]]
 
-### API Reference
+### Packages
 - [[Cerver]]
-- [[Content]]
-- [[Files]]
-- [[Headers]]
 - [[HTTP]]
-- [[Multi]]
-- [[Origin]]
+- [[Route]]
 - [[Request]]
 - [[Response]]
-- [[Route]]
-- [[Status]]
+- [[Validation]]
 - [[Threads]]
-
-### Examples
-- [[Admin]]
-- [[API]]
-- [[Jobs]]
-- [[Upload]]
-- [[Web]]
+- [[Network]]
+- [[Client]]
+- [[Utils]]
