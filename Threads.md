@@ -1,307 +1,90 @@
 # Threads
 
-## Jobs
+`from cerver.threads import ...` has the threads, the thread pool, the job queues, the workers and the worker manager of cerver.
 
-**JobMethod** = CFUNCTYPE (None, c_void_p) \
-**JobDataDelete** = CFUNCTYPE (None, c_void_p)
+| Module | What it has |
+|---|---|
+| `cerver.threads.threads` | Joinable and detachable threads, their names, mutexes and conditions |
+| `cerver.threads.bsem` | Binary semaphores |
+| `cerver.threads.thpool` | The thread pool, its queue and its stats |
+| `cerver.threads.jobs` | Jobs, job handlers and job queues with priorities, timeouts and stats |
+| `cerver.threads.worker` | Workers, and the `Worker` class |
+| `cerver.threads.manager` | The worker manager, and the `WorkerManager` class |
 
-``` python
-class Job (Structure):
-	_fields_ = [
-		("method", JobMethod),
-		("args", c_void_p),
-	]
-```
+The Python functions that cerver calls run in its threads: they take the GIL, so a pure Python work does not run in parallel with another one, but the work of cerver (the I/O, the HTTP parsing) does.
 
----
+## Thread pool
 
-**job_new ()** creates a new **Job** instance reference that should be deleted with job_delete ()
-
-``` python
-job_new () -> POINTER (Job)
-```
-
-**Returns** a new **Job** instance reference
-
----
-
-**job_delete ()** correctly disposes a **Job** instance reference
+A web cerver handles its connections in a thpool (`cerver_set_thpool_n_threads ()`). A thpool of its own:
 
 ``` python
-job_delete (
-	c_void_p			# a Job instance reference
-) -> None
+thpool = thpool_create (4)
+thpool_set_queue_size (thpool, 64)
+thpool_init (thpool)
+
+thpool_add_work (thpool, work, None)          # a ThpoolWork kept by the caller
+thpool_wait (thpool)
+thpool_stats (thpool)                          # {"total_jobs": ..., "rejected_jobs": ..., "wait_histogram": [...], ...}
+
+thpool_destroy (thpool)
 ```
 
----
+`thpool_add_work_with_reject ()` fails when the queue is full, and `thpool_add_work_wait ()` waits for space. `thpool_stats ()` returns the `ThpoolStats` as a `dict`.
 
-**job_create ()** creates a new **Job** instance reference with the ability to pass references to the work callback ands its data. It should be deleted with job_delete () 
+## Job queues
+
+A queue has a ring of jobs for each priority (`JOB_QUEUE_PRIORITY_HIGH`, `_NORMAL`, `_LOW`), and a lower priority job is taken after a number of jobs went ahead of it (`job_queue_set_starvation_limit ()`). `job_queue_pull_timeout ()` and `job_queue_pull_interruptible ()` wait for a job, and `job_queue_stats (queue)` returns its stats as a `dict`.
+
+### A handlers queue
+
+A `JOB_QUEUE_TYPE_HANDLERS` queue runs every job in a single thread, while the requests that push them wait. It keeps a resource that is not thread safe (like a model) in one thread while the cerver has many:
 
 ``` python
-job_create (
-	JobMethod,			# the jobs's callback method
-	c_void_p			# data to be passed to the callback method
-) -> POINTER (Job)
+def predict_work (work: dict) -> None:
+	"""Runs in the thread of the queue."""
+	work["result"] = model.predict (work["values"])
+
+queue = job_queue_create (JOB_QUEUE_TYPE_HANDLERS)
+job_queue_set_handler (queue, callback_wrap (predict_work, JobQueueHandler))
+job_queue_start (queue)
+
+# in a handler of a request, it returns when the work was done
+work = {"values": values, "result": None}
+job_handler_wait (queue, work, None)
+
+# after the service stopped
+job_queue_stop (queue)
+job_queue_delete (queue)
 ```
 
-**Returns** a new **Job** instance reference
+## Worker
 
----
-
-**job_get ()** gets a **Job** instance reference from the job queue's internal job pool that should be disposed using job_return ()
+A `Worker` runs a Python function with each object that is pushed to it, in its own thread, and keeps every object until it ran:
 
 ``` python
-job_get (
-	c_void_p			# reference to a JobQueue instance
-) -> POINTER (Job)
+worker = Worker ("images", process_image)
+worker.start ()
+
+worker.push ({"path": path})
+
+worker.end ()       # waits for the job that is running
+worker.delete ()
 ```
 
-**Returns** a **Job** instance reference
+A `Worker` must be released with `delete ()`: it does not call cerver when it is garbage collected.
 
----
+## Worker manager
 
-**job_reset ()** resets the **Job** instance reference internal values
+A `WorkerManager` adds workers while its jobs wait, and removes the idle ones:
 
 ``` python
-job_reset (
-	c_void_p			# a Job instance reference
-) -> None
+manager = WorkerManager ("reports", report_build, min_workers=1, max_workers=4)
+manager.start ()
+
+manager.push (report, JOB_QUEUE_PRIORITY_HIGH)
+manager.stats ()    # the WorkerManagerStats, with the stats of its queue, as a dict
+
+manager.delete ()   # the jobs that are still queued are released with it
 ```
 
----
-
-**job_return ()** pushes the **Job** instance reference into the job queue's internal job pool
-
-``` python
-job_return (
-	c_void_p,			# reference to a JobQueue instance
-	c_void_p			# a Job instance reference
-) -> None
-```
-
-## Job Hanlder
-
-**job_handler_new ()** creates a new **JobHandler** instance reference that should be deleted with job_handler_delete ()
-
-``` python
-job_handler_new () -> c_void_p
-```
-
-**Returns** a new **JobHandler** instance reference
-
----
-
-**job_handler_delete ()** correctly disposes a **JobHandler** instance reference
-
-``` python
-job_handler_delete (
-	c_void_p			# reference to a JobHandler instance
-) -> None
-```
-
----
-
-**job_handler_create ()** creates a new **JobHandler** instance reference and initializes its internal data. It should be deleted with job_handler_delete ()
-
-``` python
-job_handler_create () -> c_void_p
-```
-
-**Returns** a new **JobHandler** instance reference
-
----
-
-**job_handler_get ()** gets a **JobHandler** instance reference from the job queue's handlers pool
-
-``` python
-job_handler_get (
-	c_void_p			# reference to a JobQueue instance
-) -> c_void_p
-```
-
-**Returns** a **JobHandler** instance reference
-
----
-
-**job_handler_reset ()** resets the **JobHandler** instance reference internal values
-
-``` python
-job_handler_reset (
-	c_void_p			# reference to a JobHandler instance
-) -> None
-```
-
----
-
-**job_handler_signal ()** wakes up the waiting thread that called job_handler_wait ()
-
-``` python
-job_handler_signal (
-	c_void_p			# reference to a JobHandler instance
-) -> None
-```
-
----
-
-**job_handler_return ()** pushes the **JobHandler** instance reference into the job queue's internal handlers pool
-
-``` python
-job_handler_return (
-	c_void_p,			# reference to a JobQueue instance
-	c_void_p			# reference to a JobHandler instance
-) -> None
-```
-
----
-
-**job_handler_wait ()** pushes a **JobHandler** instance with the data reference and the data delete method to the job queue to be handled by its dedicated thread. The calling thread will wait until job_handler_signal () is called from the handler method
-
-``` python
-job_handler_wait (
-	c_void_p,			# reference to a JobQueue instance
-	py_object,			# reference to an object that will be pased to the job queue's handler method
-	JobDataDelete		# a method to dispose the data after it has been used
-) -> None
-```
-
-## Job Queue
-
-**JobQueueType**
-
-JOB_QUEUE_TYPE_NONE \
-JOB_QUEUE_TYPE_JOBS \
-JOB_QUEUE_TYPE_HANDLERS
-
-**JobQueueHandler** = CFUNCTYPE (None, py_object)
-
----
-
-**job_queue_new ()** creates a new empty JobQueue instance
-
-``` python
-job_queue_new () -> c_void_p
-```
-
-**Returns** a new JobQueue instance reference
-
----
-
-**job_queue_delete ()** correctly disposes the JobQueue instance and all of its data
-
-``` python
-job_queue_delete (
-	c_void_p			# reference to a JobQueue instance
-) -> None
-```
-
----
-
-**job_queue_create ()** creates a new JobQueue instance of the desired type
-
-``` python
-job_queue_create (
-	JobQueueType		# the job queue's type
-) -> c_void_p
-```
-
-**Returns** a new JobQueue instance reference
-
----
-
-**job_queue_set_handler ()** sets the job queue's callback method to be executed in a dedicated thread
-
-``` python
-job_queue_set_handler (
-	c_void_p,			# reference to a JobQueue instance
-	JobQueueHandler		# the callback to be executed in a dedicated thread
-) -> None
-```
-
----
-
-**job_queue_push ()** adds a new job or job handler to the queue
-
-``` python
-job_queue_push (
-	c_void_p,			# reference to a JobQueue instance
-	c_void_p			# reference to a Job or JobHandler instance
-) -> c_int
-```
-
-**Returns** 0 on success, 1 on error
-
----
-
-**job_queue_push_job ()** creates & adds a new job to the queue
-
-``` python
-job_queue_push_job (
-	c_void_p,			# reference to a JobQueue instance
-	JobMethod,			# the job's callback method
-	c_void_p			# reference to custom data
-) -> c_int
-```
-
-**Returns** 0 on success, 1 on error
-
----
-
-**job_queue_push_handler ()** creates & adds a new handler to the queue
-
-``` python
-job_queue_push_handler (
-	c_void_p,			# reference to a JobQueue instance
-	c_void_p,			# reference to a Cerver instance
-	c_void_p,			# reference to a Connection instance
-	c_void_p,			# reference to custom data
-	JobDataDelete		# the method to dispose the custom data
-) -> c_int
-```
-
-**Returns** 0 on success, 1 on error
-
----
-
-**job_queue_pull ()** gets the job or job handler reference at the start of the queue
-
-``` python
-job_queue_pull (
-	c_void_p			# reference to a JobQueue instance
-) -> c_void_p
-```
-
-**Returns** a reference to a Job or JobHandler instance
-
----
-
-**job_queue_start ()** starts the job queue's dedicated thread
-
-``` python
-job_queue_start (
-	c_void_p			# reference to a JobQueue instance
-) -> c_uint
-```
-
-**Returns** 0 on success, 1 on error
-
----
-
-**job_queue_stop ()** stops the job queue's dedicated thread
-
-``` python
-job_queue_stop (
-	c_void_p			# reference to a JobQueue instance
-) -> c_uint
-```
-
-**Returns** 0 on success, 1 on error
-
----
-
-**job_queue_clear ()** clears the job queue and destroys all jobs
-
-``` python
-job_queue_clear (
-	c_void_p			# reference to a JobQueue instance
-) -> None
-```
+It also takes `scale_up_wait` (the milliseconds that a job waits without a free worker before one is added) and `idle_timeout` (the milliseconds after which a worker without a job is removed).
